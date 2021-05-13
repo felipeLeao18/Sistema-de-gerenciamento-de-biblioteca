@@ -140,8 +140,8 @@ void menuLivros()
         adicionarLivro();
         break;
     case 2:
-        //alterarLivro();
-        //break;
+        alteraDadosLivro();
+        break;
     case 3:
         buscarLivroPorNome();
         break;
