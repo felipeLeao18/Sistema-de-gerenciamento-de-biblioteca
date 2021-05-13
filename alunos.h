@@ -23,7 +23,7 @@ typedef struct aluno
 void adicionarAluno();
 void listarTodosAlunos();
 void buscaAlunoRegistroAcademico(); 
-void alterarAluno();
+void alteraDadosAluno();
 void excluirAluno();
 
 #endif

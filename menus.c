@@ -1,8 +1,3 @@
-//
-// Created by felipe on 5/2/2021.
-//
-//
-
 #include "menus.h"
 int escolha;
 
@@ -90,7 +85,8 @@ void menuAlunos()
     printf("2- Listar alunos\n");
     printf("3- Procurar Aluno\n");
     printf("4- Excluir aluno\n");
-    printf("5- Voltar para o menu inicial\n");
+    printf("5- Alterar dados de aluno\n");
+    printf("6- Voltar para o menu inicial\n");
     printf("----------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
@@ -109,8 +105,8 @@ void menuAlunos()
         excluirAluno();
         break;
     case 5:
-        //buscarAluno();
-        //break;
+        alteraDadosAluno();
+        break;
     case 6:
         menuInicial();
         break;
