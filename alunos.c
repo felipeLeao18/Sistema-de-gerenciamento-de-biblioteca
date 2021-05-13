@@ -172,6 +172,7 @@ void alteraDadosAluno()
     FILE *file = abreArquivo("arquivoAlunos.dat", "rb+");
     Aluno aluno;
     bool achei = false;
+
     int buscaRegistroAcademico;
     printf("Digite o Registro academico do aluno que voce deseja atualizar os dados:\n");
     scanf("%d", &buscaRegistroAcademico);
@@ -183,9 +184,11 @@ void alteraDadosAluno()
             printf("Registro encontrado, aluno: %s, RA: %d; Digite os novos valores para os dados do aluno\n", aluno.nomeCompleto, aluno.numeroCelular);
             achei = true;
             inputAluno(&aluno);
+
             fseek(file, -sizeof(Aluno), SEEK_CUR);
             fwrite(&aluno, sizeof(Aluno), 1, file);
             fclose(file);
+
             printf("Registro alterado com sucesso!\n");
         }
     }

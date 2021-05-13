@@ -241,9 +241,11 @@ void alteraDadosLivro()
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
             inputLivro(&livro);
+
             fseek(file, -sizeof(Livro), SEEK_CUR);
             fwrite(&livro, sizeof(Livro), 1, file);
             fclose(file);
+            
             printf("Registro alterado com sucesso!\n");
         }
     }
