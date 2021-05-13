@@ -1,0 +1,33 @@
+#ifndef LIVROS_H
+#define LIVROS_H
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <conio.h>
+#include <ctype.h>
+#include "arquivos.h"
+
+#define MAX_ATRIBUTO_LIVRO 60
+
+//DESCRICAO A MOSTRAR PARA O MUNDO;
+typedef struct livro
+{
+    char nome[MAX_ATRIBUTO_LIVRO];
+    char genero[MAX_ATRIBUTO_LIVRO];
+    char autor[MAX_ATRIBUTO_LIVRO];
+    char editora[MAX_ATRIBUTO_LIVRO];
+    int codigo;
+    int quantidade;
+} Livro;
+
+
+void adicionarLivro();
+void listarTodosLivros();
+void buscarLivroPorNome();
+void alterarDadosLivro();
+void excluirLivro();
+
+#endif
