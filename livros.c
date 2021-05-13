@@ -11,6 +11,7 @@ void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivro
 int comparaString(const char *a, const char *b);
 void buscaOcorrencia(bool encontraOcorrencia, char *nome);
 int retornaQntLivrosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
+void inputLivros(Livro *livro);
 
 Livro *alocaMemoriaParaListaDeLivros(int quantidadeDeLivros)
 {
@@ -43,6 +44,28 @@ Livro *criaListaDeLivros(int quantidadeDeLivros)
         return NULL;
     }
     return lista;
+}
+
+void inputLivros(Livro *livro)
+{
+
+    printf("Digite o nome do livro:\n");
+    scanf(" %[^\n]", &livro->nome);
+
+    printf("Digite o genero do livro:\n"); //
+    scanf(" %[^\n]", &livro->genero);
+
+    printf("Digite o codigo do livro:\n");
+    scanf("%d", &livro->codigo);
+
+    printf("Digite a editora do livro:\n");
+    scanf(" %[^\n]", &livro->editora);
+
+    printf("Digite o autor do livro:\n");
+    scanf(" %[^\n]", &livro->autor);
+
+    printf("Digite a quantidade de exemplares a serem cadastrados:\n");
+    scanf("%d", &livro->quantidade);
 }
 
 int tratamentoErroAlocarVetorDeLivros(Livro *livro)
@@ -124,24 +147,7 @@ void adicionarLivro()
     for (index = 0; index < quantidadeDeLivrosNaLista; index++)
     {
 
-        printf("Digite o nome do livro:\n");
-        scanf(" %[^\n]", arrayLivros[index].nome);
-
-        printf("Digite o genero do livro:\n"); //
-        scanf(" %[^\n]", arrayLivros[index].genero);
-
-        printf("Digite o codigo do livro:\n");
-        scanf("%d", &arrayLivros[index].codigo);
-
-        printf("Digite a editora do livro:\n");
-        scanf(" %[^\n]", arrayLivros[index].editora);
-
-        printf("Digite o autor do livro:\n");
-        scanf(" %[^\n]", arrayLivros[index].autor);
-
-        printf("Digite a quantidade de exemplares a serem cadastrados:\n");
-        scanf("%d", &arrayLivros[index].quantidade);
-
+        inputLivros(&arrayLivros[index]);
         printf("Livro '%s' salvo com sucesso\n", arrayLivros[index].nome);
 
         fwrite(&arrayLivros[index], sizeof(arrayLivros[index]), 1, file);
@@ -218,9 +224,32 @@ void buscarLivroPorNome()
     getch();
 }
 
-void alterarDadosLivro()
+void alteraDadosLivro()
 {
-    FILE *file = abreArquivo("arquivoLivros.dat", "rb");
+    FILE *file = abreArquivo("arquivoLivros.dat", "rb+");
+    Livro livro;
+    bool achei = false;
+
+    char nomeLivroAlterado[MAX_ATRIBUTO_LIVRO];
+    printf("Digite o nome do livro a ser alterado:\n");
+    scanf(" %[^\n]", nomeLivroAlterado);
+
+    while (fread(&livro, sizeof(Livro), 1, file) > 0)
+    {
+        if (comparaString(livro.nome, nomeLivroAlterado))
+        {
+            achei = true;
+            printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
+            inputLivros(&livro);
+            fseek(file, -sizeof(Livro), SEEK_CUR);
+            fwrite(&livro, sizeof(Livro), 1, file);
+            fclose(file);
+        }
+    }
+
+    buscaOcorrencia(achei, nomeLivroAlterado);
+    printf("Pressione qualquer tecla para sair!\n");
+    getch();
 }
 
 void excluirLivro()
