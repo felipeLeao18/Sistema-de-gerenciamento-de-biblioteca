@@ -29,7 +29,7 @@ typedef struct livro
 void adicionarLivro();
 void listarTodosLivros();
 void buscarLivroPorNome();
-void alterarDadosLivro();
+void alteraDadosLivro();
 void excluirLivro();
 
 #endif
