@@ -108,13 +108,13 @@ void mostrarLivro(Livro livro)
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
 
-int comparaString(const char *a, const char *b)
+int comparaString(const char *original, const char *buscada)
 {
-    unsigned int size1 = strlen(a);
-    if (strlen(b) != size1)
+    unsigned int tamanhoStrOriginal = strlen(original);
+    if (strlen(buscada) != tamanhoStrOriginal)
         return 0;
-    for (unsigned int i = 0; i < size1; i++)
-        if (tolower(a[i]) != tolower(b[i]))
+    for (unsigned int i = 0; i < tamanhoStrOriginal; i++)
+        if (tolower(original[i]) != tolower(buscada[i]))
             return 0;
     return 1;
 }
