@@ -11,7 +11,7 @@ void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivro
 int comparaString(const char *a, const char *b);
 void buscaOcorrencia(bool encontraOcorrencia, char *nome);
 int retornaQntLivrosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
-void inputLivros(Livro *livro);
+void inputLivro(Livro *livro);
 
 Livro *alocaMemoriaParaListaDeLivros(int quantidadeDeLivros)
 {
@@ -46,7 +46,7 @@ Livro *criaListaDeLivros(int quantidadeDeLivros)
     return lista;
 }
 
-void inputLivros(Livro *livro)
+void inputLivro(Livro *livro)
 {
 
     printf("Digite o nome do livro:\n");
@@ -147,7 +147,7 @@ void adicionarLivro()
     for (index = 0; index < quantidadeDeLivrosNaLista; index++)
     {
 
-        inputLivros(&arrayLivros[index]);
+        inputLivro(&arrayLivros[index]);
         printf("Livro '%s' salvo com sucesso\n", arrayLivros[index].nome);
 
         fwrite(&arrayLivros[index], sizeof(arrayLivros[index]), 1, file);
@@ -240,10 +240,11 @@ void alteraDadosLivro()
         {
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
-            inputLivros(&livro);
+            inputLivro(&livro);
             fseek(file, -sizeof(Livro), SEEK_CUR);
             fwrite(&livro, sizeof(Livro), 1, file);
             fclose(file);
+            printf("Registro alterado com sucesso!\n");
         }
     }
 
