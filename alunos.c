@@ -1,6 +1,5 @@
 #include "alunos.h"
 
-Aluno *alocaMemoriaParaListaDeAlunos(int quantidadeDeAlunos);
 void tratamentoDeErroAlocacaoAlunos(Aluno *aluno);
 void mostraAlunos(Aluno *aluno);
 void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico);
@@ -8,23 +7,15 @@ int retornaQntAlunosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
 void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico);
 void mostraAluno(Aluno *aluno);
 void liberaListaDeAlunos(Aluno **aluno);
-void inputAluno(Aluno *aluno);
+bool inputAluno(Aluno *aluno);
+int alunoExiste(int registroAcademico);
 
-Aluno *alocaMemoriaParaListaDeAlunos(int quantidadeDeAlunos)
-{
-    Aluno *aluno = (Aluno *)malloc(sizeof(Aluno) * quantidadeDeAlunos);
-    if (!aluno)
-    {
-        printf("Houve um erro ao alocar memoria para %d aluno(s)");
-        return NULL;
-    }
-    return aluno;
-}
 void tratamentoDeErroAlocacaoAlunos(Aluno *aluno)
 {
     if (!aluno)
     {
         printf("Ocorreu um erro de memoria ao alocar memoria ALUNO - memory Error\n");
+        exit(1);
     }
 }
 void liberaListaDeAlunos(Aluno **aluno)
@@ -32,16 +23,12 @@ void liberaListaDeAlunos(Aluno **aluno)
     free(&aluno);
 }
 
-void inputAluno(Aluno *aluno)
+int retornaQntAlunosEmArquivo(FILE *file, size_t tamanhoDoArquivo)
 {
-    printf("Digite o nome do aluno\n");
-    scanf(" %[^\n]", &aluno->nomeCompleto);
 
-    printf("Digite o registro academico do aluno\n");
-    scanf("%d", &aluno->registroAcademico);
-
-    printf("Digite o numero de celular do aluno:\n");
-    scanf("%ld", &aluno->numeroCelular);
+    int quantidadeDeRegistros;
+    quantidadeDeRegistros = (tamanhoDoArquivo / sizeof(Aluno));
+    return quantidadeDeRegistros;
 }
 
 void preencheListaDeAlunosComArquivo(Aluno *aluno, FILE *file, Aluno *arrayAlunos)
@@ -54,14 +41,6 @@ void preencheListaDeAlunosComArquivo(Aluno *aluno, FILE *file, Aluno *arrayAluno
 
         contador++;
     }
-}
-
-int retornaQntAlunosEmArquivo(FILE *file, size_t tamanhoDoArquivo)
-{
-
-    int quantidadeDeRegistros;
-    quantidadeDeRegistros = (tamanhoDoArquivo / sizeof(Aluno));
-    return quantidadeDeRegistros;
 }
 
 void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico)
@@ -80,26 +59,66 @@ void mostraAluno(Aluno *aluno)
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
 
+int alunoExiste(int registroAcademico)
+{
+    bool acheiAluno = false;
+    FILE *file = fopen("arquivoAlunos.dat", "rb");
+    Aluno aluno;
+    while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
+    {
+        if (aluno.registroAcademico == registroAcademico)
+        {
+            acheiAluno = true;
+            printf("O registro academico %d ja esta cadastrado no sistema ", registroAcademico);
+
+            return 0;
+            fclose(file);
+        }
+    }
+    if (acheiAluno == false)
+        fclose(file);
+
+    return 1;
+}
+
+bool inputAluno(Aluno *aluno)
+{
+
+    printf("Digite o nome do aluno\n");
+    scanf(" %[^\n]", &aluno->nomeCompleto);
+
+    printf("Digite o registro academico do aluno\n");
+    scanf("%d", &aluno->registroAcademico);
+    if (alunoExiste(aluno->registroAcademico) == 0)
+    {
+        return false;
+    }
+    else
+    {
+        printf("Digite o numero de celular do aluno:\n");
+        scanf("%ld", &aluno->numeroCelular);
+        return true;
+    }
+}
+
 void adicionarAluno()
 {
 
-    FILE *file = abreArquivo("ArquivoAlunos.dat", "ab");
-    int quantidadeDeAlunosParaCadastro;
-    int index;
+    Aluno aluno;
 
-    printf("Digite a quantidade de alunos a serem cadastrados:\n");
-    scanf("%d", &quantidadeDeAlunosParaCadastro);
-
-    Aluno *arrayAlunos = alocaMemoriaParaListaDeAlunos(quantidadeDeAlunosParaCadastro);
-    for (index = 0; index < quantidadeDeAlunosParaCadastro; index++)
+    if (inputAluno(&aluno) == true)
     {
 
-        inputAluno(&arrayAlunos[index]);
-        fwrite(&arrayAlunos[index], sizeof(arrayAlunos[index]), 1, file);
-        printf("\nAluno '%s' cadastrado com sucesso!!!\n", arrayAlunos[index].nomeCompleto);
+        FILE *file = abreArquivo("ArquivoAlunos.dat", "ab");
+        fwrite(&aluno, sizeof(aluno), 1, file);
+        printf("\nAluno '%s' cadastrado com sucesso!!!\n", aluno.nomeCompleto);
+
+        fclose(file);
     }
-    fclose(file);
-    liberaListaDeAlunos(&arrayAlunos);
+    else
+    {
+        printf("tente cadastrar o aluno novamente!\n");
+    }
 
     printf("\nPressione qualquer tecla para continuar!\n");
     getch();
@@ -135,12 +154,13 @@ void buscaAlunoRegistroAcademico()
 {
     FILE *file = abreArquivo("arquivoAlunos.dat", "rb");
     size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
+    int registrosDeAlunos = retornaQntAlunosEmArquivo(file, tamanhoDoArquivo);
+
     Aluno aluno;
     int pesquisaRegistroAcademico;
     int index;
     bool encontraOcorrencia = false;
 
-    int registrosDeAlunos = retornaQntAlunosEmArquivo(file, tamanhoDoArquivo);
     Aluno *arrayAlunos = (Aluno *)malloc(tamanhoDoArquivo);
     tratamentoDeErroAlocacaoAlunos(arrayAlunos);
 
@@ -158,9 +178,8 @@ void buscaAlunoRegistroAcademico()
             encontraOcorrencia = true;
             mostraAluno(&arrayAlunos[index]);
         }
-
-        liberaListaDeAlunos(&arrayAlunos);
     }
+    liberaListaDeAlunos(&arrayAlunos);
     procuraOcorrencia(encontraOcorrencia, pesquisaRegistroAcademico);
 
     printf("Pressione qualquer tecla para continuar!\n");
