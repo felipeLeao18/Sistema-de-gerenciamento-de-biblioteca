@@ -69,7 +69,7 @@ int alunoExiste(int registroAcademico)
         if (aluno.registroAcademico == registroAcademico)
         {
             acheiAluno = true;
-            printf("O registro academico %d ja esta cadastrado no sistema ", registroAcademico);
+            printf("O registro academico %d ja esta cadastrado no sistema, ", registroAcademico);
 
             return 0;
             fclose(file);
@@ -106,7 +106,7 @@ void adicionarAluno()
 
     Aluno aluno;
 
-    if (inputAluno(&aluno) == true)
+    if (inputAluno(&aluno))
     {
 
         FILE *file = abreArquivo("ArquivoAlunos.dat", "ab");
@@ -117,7 +117,7 @@ void adicionarAluno()
     }
     else
     {
-        printf("tente cadastrar o aluno novamente!\n");
+        printf("confira os dados e tente cadastrar o aluno novamente!\n");
     }
 
     printf("\nPressione qualquer tecla para continuar!\n");
