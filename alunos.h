@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include "arquivos.h"
+#include "menus.h"
 #define MAX_EMAIL 50
 #define MAX_NOME_ALUNO 70
 
