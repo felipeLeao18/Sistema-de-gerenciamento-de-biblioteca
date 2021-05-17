@@ -199,13 +199,16 @@ void alteraDadosAluno()
         {
             printf("Registro encontrado, aluno: %s, RA: %d; Digite os novos valores para os dados do aluno\n", aluno.nomeCompleto, aluno.numeroCelular);
             achei = true;
-            inputAluno(&aluno);
+            
+            if (inputAluno(&aluno))
+            {
 
-            fseek(file, -sizeof(Aluno), SEEK_CUR);
-            fwrite(&aluno, sizeof(Aluno), 1, file);
-            fclose(file);
+                fseek(file, -sizeof(Aluno), SEEK_CUR);
+                fwrite(&aluno, sizeof(Aluno), 1, file);
+                fclose(file);
 
-            printf("Registro alterado com sucesso!\n");
+                printf("Registro alterado com sucesso!\n");
+            }
         }
     }
     procuraOcorrencia(achei, buscaRegistroAcademico);
