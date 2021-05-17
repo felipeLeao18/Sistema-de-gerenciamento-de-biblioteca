@@ -125,7 +125,7 @@ int existeNomeLivro(char *nomeDoLivro)
         if (comparaString(livro.nome, nomeDoLivro))
         {
             achei = true;
-            printf("O livro %s ja esta cadastrado no Sistema, confira os dados e tente novamente!\n", nomeDoLivro);
+            printf("O livro '%s' consta como cadastrado no Sistema, confira os dados e tente novamente!\n", nomeDoLivro);
 
             fclose(file);
             return 1;
@@ -147,7 +147,7 @@ int existeCodigoLivro(int codigoDoLivro)
         if (livro.codigo == codigoDoLivro)
         {
             achei = true;
-            printf("O livro %s ja esta cadastrado no Sistema com o codigo: %d, confira os dados e tente novamente!\n", livro.nome, livro.codigo);
+            printf("O livro '%s' consta como cadastrado no Sistema com o codigo: %d, confira os dados e tente novamente!\n", livro.nome, livro.codigo);
 
             fclose(file);
             return 1;
@@ -164,7 +164,7 @@ bool inputLivro(Livro *livro)
 
     printf("Digite o nome do livro:\n");
     scanf(" %[^\n]", &livro->nome);
-    if (existeNomeLivro(&livro->nome) == 1)
+    if (existeNomeLivro(livro->nome) == 1)
     {
         return false;
     }
@@ -297,7 +297,7 @@ void alteraDadosLivro()
         {
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
-            
+
             if (inputLivro(&livro))
             {
 
