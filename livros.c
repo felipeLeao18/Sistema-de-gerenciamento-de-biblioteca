@@ -11,7 +11,9 @@ void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivro
 int comparaString(const char *a, const char *b);
 void buscaOcorrencia(bool encontraOcorrencia, char *nome);
 int retornaQntLivrosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
-void inputLivro(Livro *livro);
+bool inputLivro(Livro *livro);
+int existeNomeLivro(char *nomeDoLivro);
+int existeCodigoLivro(int codigoDoLivro);
 
 Livro *alocaMemoriaParaListaDeLivros(int quantidadeDeLivros)
 {
@@ -44,28 +46,6 @@ Livro *criaListaDeLivros(int quantidadeDeLivros)
         return NULL;
     }
     return lista;
-}
-
-void inputLivro(Livro *livro)
-{
-
-    printf("Digite o nome do livro:\n");
-    scanf(" %[^\n]", &livro->nome);
-
-    printf("Digite o genero do livro:\n"); //
-    scanf(" %[^\n]", &livro->genero);
-
-    printf("Digite o codigo do livro:\n");
-    scanf("%d", &livro->codigo);
-
-    printf("Digite a editora do livro:\n");
-    scanf(" %[^\n]", &livro->editora);
-
-    printf("Digite o autor do livro:\n");
-    scanf(" %[^\n]", &livro->autor);
-
-    printf("Digite a quantidade de exemplares a serem cadastrados:\n");
-    scanf("%d", &livro->quantidade);
 }
 
 int tratamentoErroAlocarVetorDeLivros(Livro *livro)
@@ -135,6 +115,79 @@ void buscaOcorrencia(bool encontraOcorrencia, char *nome)
     }
 }
 
+int existeNomeLivro(char *nomeDoLivro)
+{
+    FILE *file = abreArquivo("arquivoLivros.dat", "rb");
+    Livro livro;
+    bool achei = false;
+    while (fread(&livro, sizeof(Livro), 1, file) > 0)
+    {
+        if (comparaString(livro.nome, nomeDoLivro))
+        {
+            achei = true;
+            printf("O livro %s ja esta cadastrado no Sistema, confira os dados e tente novamente!\n", nomeDoLivro);
+
+            fclose(file);
+            return 1;
+        }
+    }
+    if (achei == false)
+        fclose(file);
+
+    return 0;
+}
+
+int existeCodigoLivro(int codigoDoLivro)
+{
+    FILE *file = abreArquivo("arquivoLivros.dat", "rb");
+    Livro livro;
+    bool achei = false;
+    while (fread(&livro, sizeof(Livro), 1, file) > 0)
+    {
+        if (livro.codigo == codigoDoLivro)
+        {
+            achei = true;
+            printf("O livro %s ja esta cadastrado no Sistema com o codigo: %d, confira os dados e tente novamente!\n", livro.nome, livro.codigo);
+
+            fclose(file);
+            return 1;
+        }
+    }
+    if (achei == false)
+        fclose(file);
+
+    return 0;
+}
+
+bool inputLivro(Livro *livro)
+{
+
+    printf("Digite o nome do livro:\n");
+    scanf(" %[^\n]", &livro->nome);
+    if (existeNomeLivro(&livro->nome) == 1)
+    {
+        return false;
+    }
+    printf("Digite o genero do livro:\n"); //
+    scanf(" %[^\n]", &livro->genero);
+
+    printf("Digite o codigo do livro:\n");
+    scanf("%d", &livro->codigo);
+    if (existeCodigoLivro(livro->codigo) == 1)
+    {
+        return false;
+    }
+    printf("Digite a editora do livro:\n");
+    scanf(" %[^\n]", &livro->editora);
+
+    printf("Digite o autor do livro:\n");
+    scanf(" %[^\n]", &livro->autor);
+
+    printf("Digite a quantidade de exemplares a serem cadastrados:\n");
+    scanf("%d", &livro->quantidade);
+    return true;
+}
+
 void adicionarLivro()
 {
     int quantidadeDeLivrosNaLista;
@@ -147,14 +200,18 @@ void adicionarLivro()
     for (index = 0; index < quantidadeDeLivrosNaLista; index++)
     {
 
-        inputLivro(&arrayLivros[index]);
-        printf("Livro '%s' salvo com sucesso\n", arrayLivros[index].nome);
+        if (inputLivro(&arrayLivros[index]))
+        {
 
-        fwrite(&arrayLivros[index], sizeof(arrayLivros[index]), 1, file);
+            printf("Livro '%s' salvo com sucesso\n", arrayLivros[index].nome);
+
+            fwrite(&arrayLivros[index], sizeof(arrayLivros[index]), 1, file);
+        }
     }
 
     liberaListaDeLivros(&arrayLivros);
     fclose(file);
+
     printf("Pressione qualquer tecla para continuar!\n");
     getch();
 }
@@ -240,13 +297,16 @@ void alteraDadosLivro()
         {
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
-            inputLivro(&livro);
-
-            fseek(file, -sizeof(Livro), SEEK_CUR);
-            fwrite(&livro, sizeof(Livro), 1, file);
-            fclose(file);
             
-            printf("Registro alterado com sucesso!\n");
+            if (inputLivro(&livro))
+            {
+
+                fseek(file, -sizeof(Livro), SEEK_CUR);
+                fwrite(&livro, sizeof(Livro), 1, file);
+                fclose(file);
+
+                printf("Registro alterado com sucesso!\n");
+            }
         }
     }
 
