@@ -70,15 +70,14 @@ int alunoExiste(int registroAcademico)
         {
             acheiAluno = true;
             printf("O registro academico %d ja esta cadastrado no sistema, ", registroAcademico);
-
-            return 0;
             fclose(file);
+            return 1;
         }
     }
     if (acheiAluno == false)
         fclose(file);
 
-    return 1;
+    return 0;
 }
 
 bool inputAluno(Aluno *aluno)
@@ -89,16 +88,14 @@ bool inputAluno(Aluno *aluno)
 
     printf("Digite o registro academico do aluno\n");
     scanf("%d", &aluno->registroAcademico);
-    if (alunoExiste(aluno->registroAcademico) == 0)
+    if (alunoExiste(aluno->registroAcademico) == 1)
     {
         return false;
     }
-    else
-    {
-        printf("Digite o numero de celular do aluno:\n");
-        scanf("%ld", &aluno->numeroCelular);
-        return true;
-    }
+
+    printf("Digite o numero de celular do aluno:\n");
+    scanf("%ld", &aluno->numeroCelular);
+    return true;
 }
 
 void adicionarAluno()
