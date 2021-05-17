@@ -37,17 +37,6 @@ void lancaExcecaoEmCriacaoDeLista(int quantidade)
     fprintf(stderr, "Erro de alocacao com %d livros\n", quantidade);
 }
 
-Livro *criaListaDeLivros(int quantidadeDeLivros)
-{
-    Livro *lista = alocaMemoriaParaListaDeLivros(quantidadeDeLivros);
-    if (naoExisteLivro(lista))
-    {
-        lancaExcecaoEmCriacaoDeLista(quantidadeDeLivros);
-        return NULL;
-    }
-    return lista;
-}
-
 int tratamentoErroAlocarVetorDeLivros(Livro *livro)
 {
     if (!livro)
@@ -63,6 +52,18 @@ void liberaListaDeLivros(Livro **l)
 {
     free(*l);
 }
+
+Livro *criaListaDeLivros(int quantidadeDeLivros)
+{
+    Livro *lista = alocaMemoriaParaListaDeLivros(quantidadeDeLivros);
+    if (naoExisteLivro(lista))
+    {
+        lancaExcecaoEmCriacaoDeLista(quantidadeDeLivros);
+        return NULL;
+    }
+    return lista;
+}
+
 
 void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivros)
 {
