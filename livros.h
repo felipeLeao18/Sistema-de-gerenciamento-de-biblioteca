@@ -31,5 +31,5 @@ void listarTodosLivros();
 void buscarLivroPorNome();
 void alteraDadosLivro();
 void excluirLivro();
-
+int comparaString(const char *original, const char *buscada);
 #endif
