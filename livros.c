@@ -64,7 +64,6 @@ Livro *criaListaDeLivros(int quantidadeDeLivros)
     return lista;
 }
 
-
 void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivros)
 {
     int contador = 0;
@@ -247,38 +246,30 @@ void listarTodosLivros()
 
 void buscarLivroPorNome()
 {
-    FILE *file = abreArquivo("arquivoLivros.dat", "rb");
+    FILE *file = abreArquivo("arquivoLivros.dat", "rb+");
     Livro livro;
-    int totalDeRegistrosDeLivros;
-    int index;
-    char ProcuraLivroNome[MAX_ATRIBUTO_LIVRO];
-    bool encontraOcorrencia = false;
+    bool achei = false;
 
-    size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
-    totalDeRegistrosDeLivros = retornaQntLivrosEmArquivo(file, tamanhoDoArquivo);
+    char nomeLivro[MAX_ATRIBUTO_LIVRO];
+    printf("Digite o nome do livro:\n");
+    scanf(" %[^\n]", nomeLivro);
 
-    Livro *arrayLivros = (Livro *)malloc(tamanhoDoArquivo);
-    tratamentoErroAlocarVetorDeLivros(arrayLivros);
-
-    preencheListaDeLivrosComArquivo(&livro, file, arrayLivros);
-    fclose(file);
-
-    printf("Digite o nome do livro a ser procurado: \n");
-    scanf(" %[^\n]", ProcuraLivroNome);
-    for (index = 0; index < totalDeRegistrosDeLivros; index++)
+    while (fread(&livro, sizeof(Livro), 1, file) > 0)
     {
-        if (comparaString(arrayLivros[index].nome, ProcuraLivroNome))
+        if (comparaString(livro.nome, nomeLivro))
         {
+            achei = true;
             printf("- - - - - - - - - - - - - - - - - -\n");
-            encontraOcorrencia = true;
-            mostrarLivro(arrayLivros[index]);
-            break;
+            fseek(file, -sizeof(Livro), SEEK_CUR);
+           
+            mostrarLivro(livro);
+            fclose(file);
+
         }
     }
-    buscaOcorrencia(encontraOcorrencia, ProcuraLivroNome);
-    liberaListaDeLivros(&arrayLivros);
 
-    printf("Pressione qualquer tecla para continuar!\n");
+    buscaOcorrencia(achei, nomeLivro);
+    printf("Pressione qualquer tecla para sair!\n");
     getch();
 }
 
