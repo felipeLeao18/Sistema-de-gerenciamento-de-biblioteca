@@ -54,7 +54,7 @@ void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico)
 void mostraAluno(Aluno *aluno)
 {
     printf("NOME: %s\n", aluno->nomeCompleto);
-    printf("RA: %d\n", aluno->registroAcademico);
+    printf("RA: %s\n", aluno->registroAcademico);
     printf("CELULAR: %d\n", aluno->numeroCelular);
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
@@ -69,7 +69,7 @@ int alunoExiste(int registroAcademico)
         if (aluno.registroAcademico == registroAcademico)
         {
             acheiAluno = true;
-            printf("O registro academico %d ja esta cadastrado no sistema, ", registroAcademico);
+            printf("O registro academico %s ja esta cadastrado no sistema, ", registroAcademico);
             fclose(file);
             return 1;
         }
@@ -87,7 +87,7 @@ bool inputAluno(Aluno *aluno)
     scanf(" %[^\n]", &aluno->nomeCompleto);
 
     printf("Digite o registro academico do aluno\n");
-    scanf("%d", &aluno->registroAcademico);
+    scanf(" %[^\n]", &aluno->registroAcademico);
     if (alunoExiste(aluno->registroAcademico) == 1)
     {
         return false;
@@ -149,37 +149,30 @@ void listarTodosAlunos()
 
 void buscaAlunoRegistroAcademico()
 {
-    FILE *file = abreArquivo("arquivoAlunos.dat", "rb");
-    size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
-    int registrosDeAlunos = retornaQntAlunosEmArquivo(file, tamanhoDoArquivo);
-
+    FILE *file = abreArquivo("arquivoAlunos.dat", "rb+");
     Aluno aluno;
-    int pesquisaRegistroAcademico;
-    int index;
-    bool encontraOcorrencia = false;
+    bool achei = false;
 
-    Aluno *arrayAlunos = (Aluno *)malloc(tamanhoDoArquivo);
-    tratamentoDeErroAlocacaoAlunos(arrayAlunos);
+    int buscaRegistroAcademico;
+    printf("Digite o Registro academico do aluno a ser buscado:\n");
+    scanf("%d", &buscaRegistroAcademico);
 
-    preencheListaDeAlunosComArquivo(&aluno, file, arrayAlunos);
-    fclose(file);
-
-    printf("Digite o Registro academico do aluno:\n");
-    scanf("%d", &pesquisaRegistroAcademico);
-
-    for (index = 0; index < registrosDeAlunos; index++)
+    while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
-        if (arrayAlunos[index].registroAcademico == pesquisaRegistroAcademico)
+        if (aluno.registroAcademico == buscaRegistroAcademico)
         {
-            printf("- - - - - - - - - - - - - - - - - -\n");
-            encontraOcorrencia = true;
-            mostraAluno(&arrayAlunos[index]);
+
+            achei = true;
+
+            printf("\n- - - - - - - - - - - - - - - - - -\n");
+            fseek(file, -sizeof(Aluno), SEEK_CUR);
+            mostraAluno(&aluno);
+
+            fclose(file);
         }
     }
-    liberaListaDeAlunos(&arrayAlunos);
-    procuraOcorrencia(encontraOcorrencia, pesquisaRegistroAcademico);
-
-    printf("Pressione qualquer tecla para continuar!\n");
+    procuraOcorrencia(achei, buscaRegistroAcademico);
+    printf("\nPressione qualquer tecla para continuar:\n");
     getch();
 }
 
@@ -199,7 +192,7 @@ void alteraDadosAluno()
         {
             printf("Registro encontrado, aluno: %s, RA: %d; Digite os novos valores para os dados do aluno\n", aluno.nomeCompleto, aluno.numeroCelular);
             achei = true;
-            
+
             if (inputAluno(&aluno))
             {
 
