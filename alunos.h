@@ -13,11 +13,12 @@
 #define MAX_EMAIL 50
 #define MAX_NOME_ALUNO 70
 
+
 //Descricao a mostrar para o mundo
 typedef struct aluno
 {
     char nomeCompleto[MAX_NOME_ALUNO];
-    int registroAcademico;
+    char registroAcademico[19];
     long int numeroCelular;
 } Aluno;
 
