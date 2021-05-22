@@ -2,13 +2,24 @@
 
 void tratamentoDeErroAlocacaoAlunos(Aluno *aluno);
 void mostraAlunos(Aluno *aluno);
-void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico);
 int retornaQntAlunosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
-void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico);
+void procuraOcorrencia(bool encontraOcorrencia, char *registroAcademico);
 void mostraAluno(Aluno *aluno);
 void liberaListaDeAlunos(Aluno **aluno);
 bool inputAluno(Aluno *aluno);
-int alunoExiste(int registroAcademico);
+int alunoExiste(char *registroAcademico);
+int comparaNomeAluno(const char *a, const char *b);
+
+int comparaNomeAluno(const char *original, const char *buscada)
+{
+    unsigned int tamanhoStrOriginal = strlen(original);
+    if (strlen(buscada) != tamanhoStrOriginal)
+        return 0;
+    for (unsigned int i = 0; i < tamanhoStrOriginal; i++)
+        if (tolower(original[i]) != tolower(buscada[i]))
+            return 0;
+    return 1;
+}
 
 void tratamentoDeErroAlocacaoAlunos(Aluno *aluno)
 {
@@ -43,7 +54,7 @@ void preencheListaDeAlunosComArquivo(Aluno *aluno, FILE *file, Aluno *arrayAluno
     }
 }
 
-void procuraOcorrencia(bool encontraOcorrencia, int registroAcademico)
+void procuraOcorrencia(bool encontraOcorrencia, char *registroAcademico)
 {
     if (encontraOcorrencia == false)
     {
@@ -59,14 +70,14 @@ void mostraAluno(Aluno *aluno)
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
 
-int alunoExiste(int registroAcademico)
+int alunoExiste(char *registroAcademico)
 {
     bool acheiAluno = false;
     FILE *file = fopen("arquivoAlunos.dat", "rb");
     Aluno aluno;
     while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
-        if (aluno.registroAcademico == registroAcademico)
+        if (comparaNomeAluno(aluno.registroAcademico, registroAcademico))
         {
             acheiAluno = true;
             printf("O registro academico %s ja esta cadastrado no sistema, ", registroAcademico);
@@ -153,13 +164,13 @@ void buscaAlunoRegistroAcademico()
     Aluno aluno;
     bool achei = false;
 
-    int buscaRegistroAcademico;
+    char buscaRegistroAcademico[19];
     printf("Digite o Registro academico do aluno a ser buscado:\n");
-    scanf("%d", &buscaRegistroAcademico);
+    scanf(" %[^\n]", &buscaRegistroAcademico);
 
     while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
-        if (aluno.registroAcademico == buscaRegistroAcademico)
+        if (comparaNomeAluno(aluno.registroAcademico, buscaRegistroAcademico))
         {
 
             achei = true;
@@ -182,13 +193,13 @@ void alteraDadosAluno()
     Aluno aluno;
     bool achei = false;
 
-    int buscaRegistroAcademico;
+    char buscaRegistroAcademico[19];
     printf("Digite o Registro academico do aluno que voce deseja atualizar os dados:\n");
-    scanf("%d", &buscaRegistroAcademico);
+    scanf(" %[^\n]", &buscaRegistroAcademico);
 
     while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
-        if (aluno.registroAcademico == buscaRegistroAcademico)
+        if (comparaNomeAluno(aluno.registroAcademico, buscaRegistroAcademico))
         {
             printf("Registro encontrado, aluno: %s, RA: %d; Digite os novos valores para os dados do aluno\n", aluno.nomeCompleto, aluno.numeroCelular);
             achei = true;
@@ -218,7 +229,7 @@ void excluirAluno()
     size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
 
     Aluno aluno;
-    int pesquisaRegistroAcademico;
+    char buscaRegistroAcademico[19];
     int index;
     bool encontraOcorrencia = false;
 
@@ -230,11 +241,11 @@ void excluirAluno()
     fclose(file);
 
     printf("Digite o Registro academico do aluno\n");
-    scanf("%d", &pesquisaRegistroAcademico);
+    scanf(" %[^\n]", &buscaRegistroAcademico);
 
     for (index = 0; index < registrosDeAlunos; index++)
     {
-        if (arrayAlunos[index].registroAcademico == pesquisaRegistroAcademico)
+        if (comparaNomeAluno(aluno.registroAcademico, buscaRegistroAcademico))
         {
             encontraOcorrencia = true;
             printf("Aluno: %s, RA: %d; Apagado do sistema.\n", arrayAlunos[index].nomeCompleto, arrayAlunos[index].registroAcademico);
@@ -242,7 +253,7 @@ void excluirAluno()
         }
         fwrite(&arrayAlunos[index], sizeof(arrayAlunos[index]), 1, fileTemporario);
     }
-    procuraOcorrencia(encontraOcorrencia, pesquisaRegistroAcademico);
+    procuraOcorrencia(encontraOcorrencia, buscaRegistroAcademico);
 
     fclose(file);
     fclose(fileTemporario);

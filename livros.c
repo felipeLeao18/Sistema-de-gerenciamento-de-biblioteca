@@ -8,7 +8,7 @@ Livro *criaListaDeLivros(int);
 void liberaListaDeLivros(Livro **l);
 void mostrarLivro(Livro livro);
 void preencheListaDeLivrosComArquivo(Livro *livro, FILE *file, Livro *arrayLivros);
-int comparaString(const char *a, const char *b);
+int comparaNomeLivro(const char *a, const char *b);
 void buscaOcorrencia(bool encontraOcorrencia, char *nome);
 int retornaQntLivrosEmArquivo(FILE *file, size_t tamanhoDoArquivo);
 bool inputLivro(Livro *livro);
@@ -88,7 +88,7 @@ void mostrarLivro(Livro livro)
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
 
-int comparaString(const char *original, const char *buscada)
+int comparaNomeLivro(const char *original, const char *buscada)
 {
     unsigned int tamanhoStrOriginal = strlen(original);
     if (strlen(buscada) != tamanhoStrOriginal)
@@ -122,7 +122,7 @@ int existeNomeLivro(char *nomeDoLivro)
     bool achei = false;
     while (fread(&livro, sizeof(Livro), 1, file) > 0)
     {
-        if (comparaString(livro.nome, nomeDoLivro))
+        if (comparaNomeLivro(livro.nome, nomeDoLivro))
         {
             achei = true;
             printf("O livro '%s' consta como cadastrado no Sistema, confira os dados e tente novamente!\n", nomeDoLivro);
@@ -134,6 +134,12 @@ int existeNomeLivro(char *nomeDoLivro)
     if (achei == false)
         fclose(file);
 
+    return 0;
+}
+int verificaQuantidadeLivros(int quantidade){
+    if (quantidade <=0){
+        return 1;
+    }
     return 0;
 }
 
@@ -185,6 +191,7 @@ bool inputLivro(Livro *livro)
 
     printf("Digite a quantidade de exemplares a serem cadastrados:\n");
     scanf("%d", &livro->quantidade);
+    verificaQuantidadeLivros(livro->quantidade);
     return true;
 }
 
@@ -256,15 +263,14 @@ void buscarLivroPorNome()
 
     while (fread(&livro, sizeof(Livro), 1, file) > 0)
     {
-        if (comparaString(livro.nome, nomeLivro))
+        if (comparaNomeLivro(livro.nome, nomeLivro))
         {
             achei = true;
             printf("- - - - - - - - - - - - - - - - - -\n");
             fseek(file, -sizeof(Livro), SEEK_CUR);
-           
+
             mostrarLivro(livro);
             fclose(file);
-
         }
     }
 
@@ -285,7 +291,7 @@ void alteraDadosLivro()
 
     while (fread(&livro, sizeof(Livro), 1, file) > 0)
     {
-        if (comparaString(livro.nome, nomeLivroAlterado))
+        if (comparaNomeLivro(livro.nome, nomeLivroAlterado))
         {
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
@@ -333,7 +339,7 @@ void excluirLivro()
 
     for (index = 0; index < totalDeRegistrosDeLivros; index++)
     {
-        if (comparaString(arrayLivro[index].nome, procuraLivroNome))
+        if (comparaNomeLivro(arrayLivro[index].nome, procuraLivroNome))
         {
             encontraOcorrencia = true;
             printf("Livro: '%s' Apagado com sucesso!!!\n", procuraLivroNome);

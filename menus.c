@@ -1,22 +1,24 @@
 #include "menus.h"
+#include "sistema.h"
 int escolha;
-
+                                
 void menuInicial()
 {
     while (1)
     {
         system("cls");
-        printf("\n\n----------------BIBLIOTECA UFG----------------\n");
-        printf("1- Menu Do Sistema\n");
-        printf("2- Menu de Alunos\n");
-        printf("3- Menu de livros\n");
-        printf("4- Sair\n");
-        printf("----------------------------------------------\n");
+        printf("\n----------------------BIBLIOTECA UFG-------------------------\n");
+        printf("#                 1- Menu do sistema                        #\n");
+        printf("#                 2- Menu de alunos                         #\n");
+        printf("#                 3- Menu de livros                         #\n");
+        printf("#                 4- SAIR                                   #\n");
+        printf("--------------------------------------------------------------\n");
         printf("Digite sua opcao:\n");
         scanf("%d", &escolha);
-        if (escolha == 4){
+        if (escolha == 4)
+        {
             printf("FIM DO PROGRAMA!!!\n");
-            break;
+            exit(1);
         }
         switch (escolha)
         {
@@ -29,7 +31,7 @@ void menuInicial()
         case 3:
             menuLivros();
             break;
-            
+
         default:
             printf("Digite uma opcao valida!!!\n");
             menuInicial();
@@ -39,35 +41,35 @@ void menuInicial()
 
 void menuSistema()
 {
-
-    printf("\n\n----------------BIBLIOTECA UFG----------------\n");
-    printf("1- Emprestar livro\n");
-    printf("2- Verificar disponibilidade\n");
-    printf("3- Receber livro\n");
-    printf("4- Anunciar Perda\n");
-    printf("5- Abrir instrucoes do sistema\n");
-    printf("6- Voltar para o menu inicial\n");
-    printf("----------------------------------------------\n");
+    system("cls");
+    printf("\n----------------------BIBLIOTECA UFG-------------------------\n");
+    printf("#                 1- Emprestar livro                        #\n");
+    printf("#                 2- Verificar disponibilidade              #\n");
+    printf("#                 3- Receber livro                          #\n");
+    printf("#                 4- Anunciar Perda                         #\n");
+    printf("#                 5- Abrir instrucoes do sistema            #\n");
+    printf("#                 6- Voltar para o menu inicial             #\n");
+    printf("--------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
     switch (escolha)
     {
 
     case 1:
-        //emprestarLivro();
-        //break;
+        criaCliente();
+        break;
     case 2:
-        //verificarDisponibilidade();
-        //break;
+        buscaCliente();
+        break;
     case 3:
-        //Receber livro();
+        //Receber livro();  //TODO -> AUMENTAR 1 UNIDADE NO ARQUIVO LIVRO PARA O LIVRO DEVOLVIDO
         //break;
     case 4:
-        //Anunciar Perda();
+        //Anunciar Perda(); // TODO DIMINUIR -1 -> FUNCAO JA TA PRONTA
         // break;
 
     case 5:
-        //abrirInstrucoes();
+        //abrirInstrucoes(); //TODO ESCREVER TXT;
         //break;
     case 6:
         menuInicial();
@@ -80,14 +82,15 @@ void menuSistema()
 
 void menuAlunos()
 {
-    printf("\n\n----------------BIBLIOTECA UFG----------------\n");
-    printf("1- Inserir alunos\n");
-    printf("2- Listar alunos\n");
-    printf("3- Procurar Aluno\n");
-    printf("4- Excluir aluno\n");
-    printf("5- Alterar dados de aluno\n");
-    printf("6- Voltar para o menu inicial\n");
-    printf("----------------------------------------------\n");
+    system("cls");
+    printf("\n---------------------BIBLIOTECA UFG--------------------------\n");
+    printf("#                 1- Inserir alunos                         #\n");
+    printf("#                 2- Listar alunos                          #\n");
+    printf("#                 3- Procurar Aluno                         #\n");
+    printf("#                 4- Excluir aluno                          #\n");
+    printf("#                 5- Alterar dados de aluno                 #\n");
+    printf("#                 6- Voltar para o menu inicial             #\n");
+    printf("--------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
     switch (escolha)
@@ -118,14 +121,15 @@ void menuAlunos()
 
 void menuLivros()
 {
-    printf("\n\n----------------BIBLIOTECA UFG----------------\n");
-    printf("1- Inserir livro\n");
-    printf("2- Alterar livro\n");
-    printf("3- Consultar livro\n");
-    printf("4- Excluir livro do sistema\n");
-    printf("5- Listar todos os livros\n");
-    printf("6- Voltar para o menu inicial\n");
-    printf("----------------------------------------------\n");
+    system("cls");
+    printf("\n--------------------BIBLIOTECA UFG---------------------------\n");
+    printf("#                  1- Inserir livro                        #\n");
+    printf("#                  2- Alterar livro                        #\n");
+    printf("#                  3- Consultar livro                      #\n");
+    printf("#                  4- Excluir livro do sistema             #\n");
+    printf("#                  5- Listar todos os livros               #\n");
+    printf("#                  6- Voltar para o menu inicial           #\n");
+    printf("--------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
 

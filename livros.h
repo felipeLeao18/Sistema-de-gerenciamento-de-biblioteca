@@ -21,7 +21,7 @@ typedef struct livro
     char genero[MAX_TAMANHO_GENERO];
     char autor[MAX_ATRIBUTO_LIVRO];
     char editora[MAX_ATRIBUTO_LIVRO];
-    int codigo;
+    int codigo; // -> STRINGGGGGGGGGGG
     int quantidade;
 } Livro;
 
@@ -31,5 +31,5 @@ void listarTodosLivros();
 void buscarLivroPorNome();
 void alteraDadosLivro();
 void excluirLivro();
-int comparaString(const char *original, const char *buscada);
+
 #endif
