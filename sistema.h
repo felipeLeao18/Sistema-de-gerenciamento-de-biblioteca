@@ -4,18 +4,18 @@
 #include "livros.h"
 #include "alunos.h"
 #include "arquivos.h"
-#define MAX_ALUGUEIS_POR_PESSOA  2
+
 
 typedef struct cliente{
     Aluno aluno;
-    Livro livro[MAX_ALUGUEIS_POR_PESSOA];
-    
+    Livro livro[3];
+    int quantidadeLivros;       
 }  Cliente;
 
 
 
 void criaCliente();
-void buscaCliente(int registroAcademico);
+void buscaCliente();
 
 #endif
 
