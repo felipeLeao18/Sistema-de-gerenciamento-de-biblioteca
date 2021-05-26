@@ -48,7 +48,8 @@ void menuSistema()
     printf("#                 3- Receber livro                          #\n");
     printf("#                 4- Anunciar Perda                         #\n");
     printf("#                 5- Abrir instrucoes do sistema            #\n");
-    printf("#                 6- Voltar para o menu inicial             #\n");
+    printf("#                 6- Procurar registro de aluno             #\n");
+    printf("#                 7- Voltar para o menu inicial             #\n");
     printf("--------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
@@ -72,6 +73,9 @@ void menuSistema()
         //abrirInstrucoes(); //TODO ESCREVER TXT;
         //break;
     case 6:
+        buscaCliente();
+        break;
+    case 7:
         menuInicial();
         break;
     default:
