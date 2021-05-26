@@ -19,7 +19,7 @@ void buscaCliente();
 void receberLivro();
 void anunciarPerda();
 void abrirInstrucoes();
-
+void excluirRegistro();
 #endif
 
  
