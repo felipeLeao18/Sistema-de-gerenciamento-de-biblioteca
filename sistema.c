@@ -10,6 +10,12 @@ int comparaString(const char *original, const char *buscada)
             return 0;
     return 1;
 }
+void achaOcorrencia(bool achei, char *registroAcademico)
+{
+
+    if (achei == false)
+        printf("O aluno com registro academico %s nao possui alugueis pendentes\n", registroAcademico);
+}
 
 void tiraLivroEstoque(char *nomeLivro)
 {
@@ -256,6 +262,7 @@ void buscaCliente()
             break;
         }
     }
+    achaOcorrencia(achei, registroAcademico);
 }
 
 Cliente retornaCliente(char *RegistroAcademico)
@@ -278,27 +285,63 @@ Cliente retornaCliente(char *RegistroAcademico)
     if (achei == false)
     {
         printf("O aluno nao possui livros alugados\n");
-        return;
     }
 }
-// void excluirLivro()
-// {
 
-//     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
-//     FILE *fileTemporario = abreArquivo("arquivoSistemaTemporario.dat", "wb");
 
-//     Cliente cliente;
-//     Cliente *arrayClientes;
-//     int index;
 
-//     size_t tamanhoArquivo = retornaTamanhoArquivo(file);
-//     int quantidadeDeRegistros = retornaQntClientesEmArquivo(file, tamanhoArquivo);
-//     arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
+void devolveLivro(); // TODO VOLTAR QUANTIDADE DE LIVRO DISPONIVEL + 1 PARA O ARQUIVO DE LIVROS
 
-//     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
+void livroExiste(); // TODO verifica se o livro esta no registro;
+
+
+void abrirTxt(); // TODO ESCREVER TXT COM LIVROS
+
+
+
+void excluirRegistro()
+{
+
+    FILE *file = abreArquivo("arquivoSistema.dat", "rb");
+    FILE *fileTemporario = abreArquivo("arquivoSistemaTemporario.dat", "wb");
+
+    Cliente cliente;
+    Cliente *arrayClientes;
+
+    int index;
+    char registroAcademico[19];
+    bool achei = false;
+
+    size_t tamanhoArquivo = retornaTamanhoArquivo(file);
+    int quantidadeDeRegistros = retornaQntClientesEmArquivo(file, tamanhoArquivo);
+    arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
+
+    preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
+
     
-//     for (index = 0; index < quantidadeDeRegistros; index++)
-//     {
-        
-//     }
-// }
+
+    printf("Digite o RA do aluno que ira devolver os livros:\n");
+    scanf("%s", &registroAcademico);
+
+    for (index = 0; index < quantidadeDeRegistros; index++)
+    {
+        if (comparaString(arrayClientes[index].aluno.registroAcademico, registroAcademico))
+        {
+            achei = true;
+            printf("Registro excluido do sistema!\n");
+            continue;
+        }
+        else
+            fwrite(&arrayClientes[index], sizeof(arrayClientes[index]), 1, fileTemporario);
+    }
+
+    fclose(file);
+    fclose(fileTemporario);
+    renomeiaArquivoTemporario("arquivoSistema.dat", "arquivoSistemaTemporario.dat");
+    free(arrayClientes);
+
+    achaOcorrencia(achei, registroAcademico);
+
+    printf("Pressione qualquer tecla para sair\n");
+    getch();
+}
