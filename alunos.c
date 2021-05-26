@@ -239,6 +239,7 @@ void excluirAluno()
 
     preencheListaDeAlunosComArquivo(&aluno, file, arrayAlunos);
     
+    
 
     printf("Digite o Registro academico do aluno\n");
     scanf("%s", &buscaRegistroAcademico);
