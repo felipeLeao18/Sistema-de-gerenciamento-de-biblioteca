@@ -26,6 +26,7 @@ void tiraLivroEstoque(char *nomeLivro)
             livro.quantidade -= 1;
             fwrite(&livro, sizeof(Livro), 1, file);
             fclose(file);
+            break;
         }
     }
 }
@@ -149,7 +150,6 @@ bool verificaDisponibilidade(char *nomeLivro)
 bool inputCliente(Cliente *cliente)
 {
     int index;
-    
 
     printf("Digite o Registro academico do aluno que ira alugar o(s) livro(s):\n");
     scanf(" %[^\n]", cliente->aluno.registroAcademico);
@@ -181,6 +181,26 @@ bool inputCliente(Cliente *cliente)
         }
     }
     return true;
+}
+
+void preencheListaDeClientesComArquivo(Cliente *cliente, FILE *file, Cliente *arrayClientes)
+{
+    int contador = 0;
+    fseek(file, 0L, SEEK_SET);
+    while (fread(cliente, sizeof(Cliente), 1, file) > 0)
+    {
+        arrayClientes[contador] = *cliente;
+
+        contador++;
+    }
+}
+
+int retornaQntClientesEmArquivo(FILE *file, size_t tamanhoDoArquivo)
+{
+
+    int quantidadeDeRegistros;
+    quantidadeDeRegistros = (tamanhoDoArquivo / sizeof(Cliente));
+    return quantidadeDeRegistros;
 }
 
 void criaCliente()
@@ -233,6 +253,52 @@ void buscaCliente()
             printf("- - - - - - - - - - - - - - - - - -\n");
 
             fclose(file);
+            break;
         }
     }
 }
+
+Cliente retornaCliente(char *RegistroAcademico)
+{
+    FILE *file = abreArquivo("arquivoSistema.dat", "rb");
+    Cliente cliente;
+    bool achei = false;
+
+    while (fread(&cliente, sizeof(Cliente), 1, file) > 0)
+    {
+        if (comparaString(cliente.aluno.registroAcademico, RegistroAcademico))
+        {
+            achei = true;
+
+            fseek(file, -sizeof(Cliente), SEEK_CUR);
+            return cliente;
+        }
+    }
+
+    if (achei == false)
+    {
+        printf("O aluno nao possui livros alugados\n");
+        return;
+    }
+}
+// void excluirLivro()
+// {
+
+//     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
+//     FILE *fileTemporario = abreArquivo("arquivoSistemaTemporario.dat", "wb");
+
+//     Cliente cliente;
+//     Cliente *arrayClientes;
+//     int index;
+
+//     size_t tamanhoArquivo = retornaTamanhoArquivo(file);
+//     int quantidadeDeRegistros = retornaQntClientesEmArquivo(file, tamanhoArquivo);
+//     arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
+
+//     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
+    
+//     for (index = 0; index < quantidadeDeRegistros; index++)
+//     {
+        
+//     }
+// }

@@ -238,20 +238,21 @@ void excluirAluno()
     tratamentoDeErroAlocacaoAlunos(arrayAlunos);
 
     preencheListaDeAlunosComArquivo(&aluno, file, arrayAlunos);
-    fclose(file);
+    
 
     printf("Digite o Registro academico do aluno\n");
-    scanf(" %[^\n]", &buscaRegistroAcademico);
+    scanf("%s", &buscaRegistroAcademico);
 
     for (index = 0; index < registrosDeAlunos; index++)
     {
-        if (comparaNomeAluno(aluno.registroAcademico, buscaRegistroAcademico))
+        if (comparaNomeAluno(arrayAlunos[index].registroAcademico, buscaRegistroAcademico))
         {
             encontraOcorrencia = true;
-            printf("Aluno: %s, RA: %d; Apagado do sistema.\n", arrayAlunos[index].nomeCompleto, arrayAlunos[index].registroAcademico);
+            printf("Aluno: %s, RA: %s; Apagado do sistema.\n", arrayAlunos[index].nomeCompleto, arrayAlunos[index].registroAcademico);
             continue;
         }
-        fwrite(&arrayAlunos[index], sizeof(arrayAlunos[index]), 1, fileTemporario);
+        else
+            fwrite(&arrayAlunos[index], sizeof(arrayAlunos[index]), 1, fileTemporario);
     }
     procuraOcorrencia(encontraOcorrencia, buscaRegistroAcademico);
 

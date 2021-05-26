@@ -271,6 +271,7 @@ void buscarLivroPorNome()
 
             mostrarLivro(livro);
             fclose(file);
+            break;
         }
     }
 
@@ -304,6 +305,7 @@ void alteraDadosLivro()
                 fclose(file);
 
                 printf("Registro alterado com sucesso!\n");
+                break;
             }
         }
     }

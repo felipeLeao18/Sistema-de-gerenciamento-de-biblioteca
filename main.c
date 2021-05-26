@@ -10,11 +10,7 @@ TODO
 
 int main(int argc, char *argv[])
 {
-     listarTodosLivros();
-     criaCliente();
-     buscaCliente();
-     listarTodosLivros();
-
+     menuInicial();
 
     return 0;
 }
