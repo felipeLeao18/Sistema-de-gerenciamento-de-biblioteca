@@ -19,10 +19,10 @@ void achaOcorrencia(bool achei, char *registroAcademico)
 
 void cadastraData(Cliente *cliente)
 {
-    
+
     time(&tempoAtual);
     cliente->myTime = localtime(&tempoAtual);
-   cliente->diaAluguel = cliente->myTime->tm_mday;
+    cliente->diaAluguel = cliente->myTime->tm_mday;
     cliente->mesAluguel = cliente->myTime->tm_mon + 1;
     cliente->anoAluguel = cliente->myTime->tm_year + 1900;
     cliente->diaDevolucao = cliente->myTime->tm_mday + 7;
@@ -36,12 +36,7 @@ void cadastraData(Cliente *cliente)
         cliente->mesDevolucao = cliente->myTime->tm_mon + 1;
     }
 
-    if (cliente->mesDevolucao > 12)
-    {
-       cliente->anoDevolucao = cliente->myTime->tm_year + 1901;
-    }
-    else
-       cliente->anoDevolucao = cliente->myTime->tm_year + 1900;
+    cliente->anoDevolucao = cliente->anoAluguel;
 }
 
 void preencheListaDeClientesComArquivo(Cliente *cliente, FILE *file, Cliente *arrayClientes)
@@ -244,8 +239,7 @@ void criaCliente()
     cliente = (Cliente *)malloc(sizeof(Cliente));
     if (inputCliente(cliente))
     {
-       
-        
+
         fwrite(cliente, sizeof(Cliente), 1, file);
         fclose(file);
 
@@ -284,7 +278,7 @@ void buscaCliente()
             {
                 printf("%s, autor: %s, editora: %s\n", cliente.livro[index].nome, cliente.livro[index].autor, cliente.livro[index].editora);
             }
-            printf("Aluguel: %i/%i/%i\nDevolucao:%i/%i/%i\n ", cliente.diaAluguel, cliente.mesAluguel, cliente.anoAluguel, cliente.diaDevolucao, cliente.mesDevolucao,cliente.anoDevolucao);
+            printf("Aluguel: %i/%i/%i\nDevolucao:%i/%i/%i\n ", cliente.diaAluguel, cliente.mesAluguel, cliente.anoAluguel, cliente.diaDevolucao, cliente.mesDevolucao, cliente.anoDevolucao);
             printf("- - - - - - - - - - - - - - - - - -\n");
 
             fclose(file);
@@ -347,12 +341,50 @@ void receberLivro()
     int i;
     for (i = 0; i < cliente.quantidadeLivros; i++)
     {
-        receberLivro(cliente.livro[i].nome);
+        aumentaQtdLivro(cliente.livro[i].nome);
         printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
     }
 }
 
-void livroExiste(); // TODO verifica se o livro esta no registro;
+void listarTodosClientes()
+{
+
+    FILE *file = abreArquivo("arquivoSistema.dat", "rb");
+
+    size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
+    Cliente cliente;
+
+    int registrosDeClientes = retornaQntClientesEmArquivo(file, tamanhoDoArquivo);
+
+    Cliente *arrayClientes = (Cliente *)malloc(tamanhoDoArquivo);
+    if (!arrayClientes)
+    {
+        printf("Erro ao alocar memoria\n");
+    }
+
+    preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
+    fclose(file);
+
+    int index1, index2;
+
+    printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+
+    for (index1 = 0; index1 < registrosDeClientes; index1++)
+    {
+
+        printf("NOME ALUNO: %s\n", arrayClientes[index1].aluno.nomeCompleto);
+        printf("Quantidade de livros Alugados: %d\n",arrayClientes[index1].quantidadeLivros);
+        printf("Livros alugados:\n");
+
+        for (index2 = 0; index2 < arrayClientes[index1].quantidadeLivros; index2++)
+        {
+            printf("%s, autor: %s, editora: %s\n", cliente.livro[index2].nome, cliente.livro[index2].autor, cliente.livro[index2].editora);
+        }
+        printf("Data de aluguel: %i/%i/%i\nData de devolucao: %i/%i/%i\n ", arrayClientes[index1].diaAluguel, arrayClientes[index1].mesAluguel, arrayClientes[index1].anoAluguel, arrayClientes[index1].diaDevolucao, arrayClientes[index1].mesDevolucao, arrayClientes[index1].anoDevolucao);
+        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+    }
+    free(arrayClientes);
+}
 
 void abrirTxt(); // TODO ESCREVER TXT COM LIVROS
 
