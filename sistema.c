@@ -17,6 +17,53 @@ void achaOcorrencia(bool achei, char *registroAcademico)
         printf("O aluno com registro academico %s nao possui alugueis pendentes\n", registroAcademico);
 }
 
+void cadastraData(Cliente *cliente)
+{
+    
+    time(&tempoAtual);
+    cliente->myTime = localtime(&tempoAtual);
+   cliente->diaAluguel = cliente->myTime->tm_mday;
+    cliente->mesAluguel = cliente->myTime->tm_mon + 1;
+    cliente->anoAluguel = cliente->myTime->tm_year + 1900;
+    cliente->diaDevolucao = cliente->myTime->tm_mday + 7;
+    if (cliente->diaDevolucao > 31)
+    {
+        cliente->mesDevolucao = cliente->myTime->tm_mon + 2;
+        cliente->diaDevolucao -= 31;
+    }
+    else
+    {
+        cliente->mesDevolucao = cliente->myTime->tm_mon + 1;
+    }
+
+    if (cliente->mesDevolucao > 12)
+    {
+       cliente->anoDevolucao = cliente->myTime->tm_year + 1901;
+    }
+    else
+       cliente->anoDevolucao = cliente->myTime->tm_year + 1900;
+}
+
+void preencheListaDeClientesComArquivo(Cliente *cliente, FILE *file, Cliente *arrayClientes)
+{
+    int contador = 0;
+    fseek(file, 0L, SEEK_SET);
+    while (fread(cliente, sizeof(Cliente), 1, file) > 0)
+    {
+        arrayClientes[contador] = *cliente;
+
+        contador++;
+    }
+}
+
+int retornaQntClientesEmArquivo(FILE *file, size_t tamanhoDoArquivo)
+{
+
+    int quantidadeDeRegistros;
+    quantidadeDeRegistros = (tamanhoDoArquivo / sizeof(Cliente));
+    return quantidadeDeRegistros;
+}
+
 void tiraLivroEstoque(char *nomeLivro)
 {
     FILE *file = abreArquivo("arquivoLivros.dat", "rb+");
@@ -186,27 +233,8 @@ bool inputCliente(Cliente *cliente)
             return false;
         }
     }
+    cadastraData(cliente);
     return true;
-}
-
-void preencheListaDeClientesComArquivo(Cliente *cliente, FILE *file, Cliente *arrayClientes)
-{
-    int contador = 0;
-    fseek(file, 0L, SEEK_SET);
-    while (fread(cliente, sizeof(Cliente), 1, file) > 0)
-    {
-        arrayClientes[contador] = *cliente;
-
-        contador++;
-    }
-}
-
-int retornaQntClientesEmArquivo(FILE *file, size_t tamanhoDoArquivo)
-{
-
-    int quantidadeDeRegistros;
-    quantidadeDeRegistros = (tamanhoDoArquivo / sizeof(Cliente));
-    return quantidadeDeRegistros;
 }
 
 void criaCliente()
@@ -216,7 +244,8 @@ void criaCliente()
     cliente = (Cliente *)malloc(sizeof(Cliente));
     if (inputCliente(cliente))
     {
-
+       
+        
         fwrite(cliente, sizeof(Cliente), 1, file);
         fclose(file);
 
@@ -255,7 +284,7 @@ void buscaCliente()
             {
                 printf("%s, autor: %s, editora: %s\n", cliente.livro[index].nome, cliente.livro[index].autor, cliente.livro[index].editora);
             }
-
+            printf("Aluguel: %i/%i/%i\nDevolucao:%i/%i/%i\n ", cliente.diaAluguel, cliente.mesAluguel, cliente.anoAluguel, cliente.diaDevolucao, cliente.mesDevolucao,cliente.anoDevolucao);
             printf("- - - - - - - - - - - - - - - - - -\n");
 
             fclose(file);
@@ -288,16 +317,44 @@ Cliente retornaCliente(char *RegistroAcademico)
     }
 }
 
+void aumentaQtdLivro(char *caminho)
+{
 
+    Livro livro;
 
-void devolveLivro(); // TODO VOLTAR QUANTIDADE DE LIVRO DISPONIVEL + 1 PARA O ARQUIVO DE LIVROS
+    FILE *fileLivros = abreArquivo("arquivoLivros.dat", "rb+");
+    int index = 0;
+
+    while (fread(&livro, sizeof(Livro), 1, fileLivros) > 0)
+    {
+        if (comparaString(caminho, livro.nome))
+        {
+            fseek(fileLivros, -sizeof(livro), SEEK_CUR);
+            livro.quantidade += 1;
+            fwrite(&livro, sizeof(Livro), 1, fileLivros);
+            break;
+        }
+    }
+    fclose(fileLivros);
+}
+
+void receberLivro()
+{
+    char registroAcademico[19];
+    printf("Digite o registro do academico do aluno\n");
+    scanf("%s", &registroAcademico);
+    Cliente cliente = retornaCliente(registroAcademico);
+    int i;
+    for (i = 0; i < cliente.quantidadeLivros; i++)
+    {
+        receberLivro(cliente.livro[i].nome);
+        printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
+    }
+}
 
 void livroExiste(); // TODO verifica se o livro esta no registro;
 
-
 void abrirTxt(); // TODO ESCREVER TXT COM LIVROS
-
-
 
 void excluirRegistro()
 {
@@ -317,8 +374,6 @@ void excluirRegistro()
     arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
 
     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
-
-    
 
     printf("Digite o RA do aluno que ira devolver os livros:\n");
     scanf("%s", &registroAcademico);
