@@ -98,7 +98,7 @@ bool inputAluno(Aluno *aluno)
     scanf(" %[^\n]", &aluno->nomeCompleto);
 
     printf("Digite o registro academico do aluno\n");
-    scanf(" %[^\n]", &aluno->registroAcademico);
+    scanf("%s", &aluno->registroAcademico);
     if (alunoExiste(aluno->registroAcademico) == 1)
     {
         return false;
@@ -166,7 +166,7 @@ void buscaAlunoRegistroAcademico()
 
     char buscaRegistroAcademico[19];
     printf("Digite o Registro academico do aluno a ser buscado:\n");
-    scanf(" %[^\n]", &buscaRegistroAcademico);
+    scanf("%s", &buscaRegistroAcademico);
 
     while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
@@ -195,7 +195,7 @@ void alteraDadosAluno()
 
     char buscaRegistroAcademico[19];
     printf("Digite o Registro academico do aluno que voce deseja atualizar os dados:\n");
-    scanf(" %[^\n]", &buscaRegistroAcademico);
+    scanf("%s", &buscaRegistroAcademico);
 
     while (fread(&aluno, sizeof(Aluno), 1, file) > 0)
     {
