@@ -15,13 +15,16 @@ typedef struct cliente
     int diaAluguel, mesAluguel, anoAluguel;
     int diaDevolucao, mesDevolucao, anoDevolucao;
 } Cliente;
+
 time_t tempoAtual;
+
 void criaCliente();
 void buscaCliente();
 void receberLivro();
 void anunciarPerda();
 void abrirInstrucoes();
 void excluirRegistro();
+void listarTodosClientes();
 
 #endif
 
