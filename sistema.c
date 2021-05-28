@@ -1,5 +1,8 @@
 #include "sistema.h"
 
+void excluirRegistro(char registroAcademico[19]);
+
+
 int comparaString(const char *original, const char *buscada)
 {
     unsigned int tamanhoStrOriginal = strlen(original);
@@ -166,6 +169,7 @@ Aluno retornaAluno(char *registroAcademico)
         exit(1);
     }
 }
+
 bool verificaDisponibilidade(char *nomeLivro)
 {
     FILE *file = abreArquivo("arquivoLivros.dat", "rb");
@@ -212,6 +216,12 @@ bool inputCliente(Cliente *cliente)
     printf("Digite a quantidade de livros que o aluno ira alugar:\n");
     scanf("%d", &cliente->quantidadeLivros);
 
+    if (cliente->quantidadeLivros > 3)
+    {
+        printf("Nao e possivel alugar mais de 3 livros por Registro academico\n");
+        return false;
+    }
+
     for (index = 0; index < cliente->quantidadeLivros; index++)
     {
         printf("Digite o nome do(s) livro(s) a serem alugados:\n");
@@ -242,9 +252,24 @@ void criaCliente()
 
         fwrite(cliente, sizeof(Cliente), 1, file);
         fclose(file);
+        printf("Aluguel criado com sucesso\n", cliente->aluno.nomeCompleto);
 
         free(&cliente);
     }
+}
+
+void mostrarCliente(Cliente *cliente)
+{
+
+    printf("\nNOME ALUNO: %s - Registro academico: %s\n", cliente->aluno.nomeCompleto, cliente->aluno.registroAcademico);
+    int index;
+    printf("Livro(s) alugado(s) %d:\n", cliente->quantidadeLivros);
+    for (index = 0; index < cliente->quantidadeLivros; index++)
+    {
+        printf("%s, autor: %s, editora: %s\n", cliente->livro[index].nome, cliente->livro[index].autor, cliente->livro[index].editora);
+    }
+    printf("Aluguel: %i/%i/%i\nDevolucao:%i/%i/%i\n", cliente->diaAluguel, cliente->mesAluguel, cliente->anoAluguel, cliente->diaDevolucao, cliente->mesDevolucao, cliente->anoDevolucao);
+    printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 }
 
 void buscaCliente()
@@ -269,17 +294,9 @@ void buscaCliente()
 
             fseek(file, -sizeof(Cliente), SEEK_CUR);
 
-            printf("\n- - - - - - - - - - - - - - - - - -\n");
+            printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
-            printf("NOME ALUNO: %s\n\n", cliente.aluno.nomeCompleto);
-
-            printf("Livro(s) alugado(s):\n");
-            for (index = 0; index < cliente.quantidadeLivros; index++)
-            {
-                printf("%s, autor: %s, editora: %s\n", cliente.livro[index].nome, cliente.livro[index].autor, cliente.livro[index].editora);
-            }
-            printf("Aluguel: %i/%i/%i\nDevolucao:%i/%i/%i\n ", cliente.diaAluguel, cliente.mesAluguel, cliente.anoAluguel, cliente.diaDevolucao, cliente.mesDevolucao, cliente.anoDevolucao);
-            printf("- - - - - - - - - - - - - - - - - -\n");
+            mostrarCliente(&cliente);
 
             fclose(file);
             break;
@@ -301,6 +318,7 @@ Cliente retornaCliente(char *RegistroAcademico)
             achei = true;
 
             fseek(file, -sizeof(Cliente), SEEK_CUR);
+            fclose(file);
             return cliente;
         }
     }
@@ -309,9 +327,10 @@ Cliente retornaCliente(char *RegistroAcademico)
     {
         printf("O aluno nao possui livros alugados\n");
     }
+    fclose(file);
 }
 
-void aumentaQtdLivro(char *caminho)
+void aumentaQtdLivroEmArquivoLivro(char *nomeDoLivro)
 {
 
     Livro livro;
@@ -321,7 +340,7 @@ void aumentaQtdLivro(char *caminho)
 
     while (fread(&livro, sizeof(Livro), 1, fileLivros) > 0)
     {
-        if (comparaString(caminho, livro.nome))
+        if (comparaString(nomeDoLivro, livro.nome))
         {
             fseek(fileLivros, -sizeof(livro), SEEK_CUR);
             livro.quantidade += 1;
@@ -332,25 +351,12 @@ void aumentaQtdLivro(char *caminho)
     fclose(fileLivros);
 }
 
-void receberLivro()
-{
-    char registroAcademico[19];
-    printf("Digite o registro do academico do aluno\n");
-    scanf("%s", &registroAcademico);
-    Cliente cliente = retornaCliente(registroAcademico);
-    int i;
-    for (i = 0; i < cliente.quantidadeLivros; i++)
-    {
-        aumentaQtdLivro(cliente.livro[i].nome);
-        printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
-    }
-}
-
 void listarTodosClientes()
 {
 
     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
 
+    int index;
     size_t tamanhoDoArquivo = retornaTamanhoArquivo(file);
     Cliente cliente;
 
@@ -365,32 +371,20 @@ void listarTodosClientes()
     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
     fclose(file);
 
-    int index1, index2;
+    printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
-    printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+    for (index = 0; index < registrosDeClientes; index++)
+        mostrarCliente(&arrayClientes[index]);
 
-    for (index1 = 0; index1 < registrosDeClientes; index1++)
-    {
-
-        printf("NOME ALUNO: %s\n", arrayClientes[index1].aluno.nomeCompleto);
-        printf("Quantidade de livros Alugados: %d\n",arrayClientes[index1].quantidadeLivros);
-        printf("Livros alugados:\n");
-
-        for (index2 = 0; index2 < arrayClientes[index1].quantidadeLivros; index2++)
-        {
-            printf("%s, autor: %s, editora: %s\n", cliente.livro[index2].nome, cliente.livro[index2].autor, cliente.livro[index2].editora);
-        }
-        printf("Data de aluguel: %i/%i/%i\nData de devolucao: %i/%i/%i\n ", arrayClientes[index1].diaAluguel, arrayClientes[index1].mesAluguel, arrayClientes[index1].anoAluguel, arrayClientes[index1].diaDevolucao, arrayClientes[index1].mesDevolucao, arrayClientes[index1].anoDevolucao);
-        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-    }
     free(arrayClientes);
 }
 
-void abrirTxt(); // TODO ESCREVER TXT COM LIVROS
+void abrirInstrucoes(); // TODO ESCREVER TXT COM LIVROS
 
-void excluirRegistro()
+
+void excluirRegistro(char registroAcademico[19])
 {
-
+    
     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
     FILE *fileTemporario = abreArquivo("arquivoSistemaTemporario.dat", "wb");
 
@@ -398,7 +392,7 @@ void excluirRegistro()
     Cliente *arrayClientes;
 
     int index;
-    char registroAcademico[19];
+
     bool achei = false;
 
     size_t tamanhoArquivo = retornaTamanhoArquivo(file);
@@ -406,9 +400,6 @@ void excluirRegistro()
     arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
 
     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
-
-    printf("Digite o RA do aluno que ira devolver os livros:\n");
-    scanf("%s", &registroAcademico);
 
     for (index = 0; index < quantidadeDeRegistros; index++)
     {
@@ -418,17 +409,32 @@ void excluirRegistro()
             printf("Registro excluido do sistema!\n");
             continue;
         }
-        else
             fwrite(&arrayClientes[index], sizeof(arrayClientes[index]), 1, fileTemporario);
     }
 
     fclose(file);
     fclose(fileTemporario);
-    renomeiaArquivoTemporario("arquivoSistema.dat", "arquivoSistemaTemporario.dat");
     free(arrayClientes);
+    renomeiaArquivoTemporario("arquivoSistema.dat","arquivoSistemaTemporario.dat");
 
     achaOcorrencia(achei, registroAcademico);
 
     printf("Pressione qualquer tecla para sair\n");
     getch();
+}
+
+void receberLivro()
+{
+    char registroAcademico[19];
+    printf("Digite o registro do academico do aluno\n");
+    scanf("%s", &registroAcademico);
+    Cliente cliente = retornaCliente(registroAcademico);
+    int i;
+
+    for (i = 0; i < cliente.quantidadeLivros; i++)
+    {
+        aumentaQtdLivroEmArquivoLivro(cliente.livro[i].nome);
+        printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
+    }
+    excluirRegistro(registroAcademico);   //POR FAVOR FUNCIONA
 }
