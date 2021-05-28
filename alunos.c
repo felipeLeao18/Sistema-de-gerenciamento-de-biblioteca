@@ -66,7 +66,7 @@ void mostraAluno(Aluno *aluno)
 {
     printf("NOME: %s\n", aluno->nomeCompleto);
     printf("RA: %s\n", aluno->registroAcademico);
-    printf("CELULAR: %d\n", aluno->numeroCelular);
+    printf("CELULAR: %s\n", aluno->numeroCelular);
     printf("- - - - - - - - - - - - - - - - - -\n");
 }
 
@@ -96,6 +96,7 @@ bool inputAluno(Aluno *aluno)
 
     printf("Digite o nome do aluno\n");
     scanf(" %[^\n]", &aluno->nomeCompleto);
+    aluno->nomeCompleto[0] = toupper(aluno->nomeCompleto[0]);
 
     printf("Digite o registro academico do aluno\n");
     scanf("%s", &aluno->registroAcademico);
@@ -105,7 +106,7 @@ bool inputAluno(Aluno *aluno)
     }
 
     printf("Digite o numero de celular do aluno:\n");
-    scanf("%ld", &aluno->numeroCelular);
+    scanf(" %[^\n]", &aluno->numeroCelular);
     return true;
 }
 
@@ -132,6 +133,14 @@ void adicionarAluno()
     getch();
 }
 
+int ordenaAlunoPorNome(const void *a, const void *b)
+
+{
+    const Aluno *ponteiroAluno1 = a;
+    const Aluno *ponteiroAluno2 = b;
+    return strcmp(ponteiroAluno1->nomeCompleto, ponteiroAluno2->nomeCompleto);
+}
+
 void listarTodosAlunos()
 {
     FILE *file = abreArquivo("arquivoAlunos.dat", "rb");
@@ -145,6 +154,7 @@ void listarTodosAlunos()
     preencheListaDeAlunosComArquivo(&aluno, file, arrayAlunos);
     fclose(file);
 
+    qsort(arrayAlunos, registrosDeAlunos, sizeof(Aluno), ordenaAlunoPorNome);
     int index;
     printf("- - - - - - - -ALUNOS - - - - - - - - - -\n");
     for (index = 0; index < registrosDeAlunos; index++)
@@ -182,6 +192,7 @@ void buscaAlunoRegistroAcademico()
             fclose(file);
         }
     }
+    fclose(file);
     procuraOcorrencia(achei, buscaRegistroAcademico);
     printf("\nPressione qualquer tecla para continuar:\n");
     getch();
@@ -204,17 +215,24 @@ void alteraDadosAluno()
             printf("Registro encontrado, aluno: %s, RA: %d; Digite os novos valores para os dados do aluno\n", aluno.nomeCompleto, aluno.numeroCelular);
             achei = true;
 
-            if (inputAluno(&aluno))
-            {
+            printf("Digite o nome do aluno\n");
+            scanf(" %[^\n]", &aluno.nomeCompleto);
+            aluno.nomeCompleto[0] = toupper(aluno.nomeCompleto[0]);
 
-                fseek(file, -sizeof(Aluno), SEEK_CUR);
-                fwrite(&aluno, sizeof(Aluno), 1, file);
-                fclose(file);
+            printf("Digite o registro academico do aluno\n");
+            scanf("%s", &aluno.registroAcademico);
+            
+            printf("Digite o numero de celular do aluno:\n");
+            scanf(" %[^\n]", &aluno.numeroCelular);
 
-                printf("Registro alterado com sucesso!\n");
-            }
+            fseek(file, -sizeof(Aluno), SEEK_CUR);
+            fwrite(&aluno, sizeof(Aluno), 1, file);
+            fclose(file);
+
+            printf("Registro alterado com sucesso!\n");
         }
     }
+    fclose(file);
     procuraOcorrencia(achei, buscaRegistroAcademico);
     printf("\nPressione qualquer tecla para continuar:\n");
     getch();
@@ -238,8 +256,6 @@ void excluirAluno()
     tratamentoDeErroAlocacaoAlunos(arrayAlunos);
 
     preencheListaDeAlunosComArquivo(&aluno, file, arrayAlunos);
-    
-    
 
     printf("Digite o Registro academico do aluno\n");
     scanf("%s", &buscaRegistroAcademico);

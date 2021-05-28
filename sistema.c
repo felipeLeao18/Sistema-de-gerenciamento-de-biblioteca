@@ -2,7 +2,6 @@
 
 void excluirRegistro(char registroAcademico[19]);
 
-
 int comparaString(const char *original, const char *buscada)
 {
     unsigned int tamanhoStrOriginal = strlen(original);
@@ -13,6 +12,14 @@ int comparaString(const char *original, const char *buscada)
             return 0;
     return 1;
 }
+
+int struct_cmp_by_product(const void *a, const void *b)
+{
+    Cliente *ia = (Cliente *)a;
+    Cliente *ib = (Cliente *)b;
+    return strcmp(ia->aluno.nomeCompleto, ib->aluno.nomeCompleto);
+}
+
 void achaOcorrencia(bool achei, char *registroAcademico)
 {
 
@@ -80,6 +87,10 @@ void tiraLivroEstoque(char *nomeLivro)
             break;
         }
     }
+    if (achei == false)
+    {
+        printf("Livro nao encontrado no sistema");
+    }
 }
 
 int verificaOcorrenciaRegistroAcademico(char *registroAcademico)
@@ -134,7 +145,10 @@ Livro retornaLivro(char *nome)
     else
     {
         printf("Livro nao encontrado, confira os dados e tente novamente!\n");
-        exit(1);
+        printf("Pressione qualquer tecla para sair\n");
+        getch();
+
+        menuInicial();
     }
 }
 
@@ -166,11 +180,13 @@ Aluno retornaAluno(char *registroAcademico)
     else
     {
         printf("Aluno nao encontrado no sistema, confira os dados e tente novamente!\n");
-        exit(1);
+        printf("Pressione qualquer tecla para sair\n");
+        getch();
+        menuInicial();
     }
 }
 
-bool verificaDisponibilidade(char *nomeLivro)
+bool verificaDisponibilidadeLivro(char *nomeLivro)
 {
     FILE *file = abreArquivo("arquivoLivros.dat", "rb");
     Livro livro;
@@ -226,7 +242,7 @@ bool inputCliente(Cliente *cliente)
     {
         printf("Digite o nome do(s) livro(s) a serem alugados:\n");
         scanf(" %[^\n]", &cliente->livro[index].nome);
-        if (verificaDisponibilidade(cliente->livro[index].nome))
+        if (verificaDisponibilidadeLivro(cliente->livro[index].nome))
         {
 
             cliente->livro[index] = retornaLivro(cliente->livro[index].nome);
@@ -256,6 +272,9 @@ void criaCliente()
 
         free(&cliente);
     }
+
+    printf("Pressione qualquer tecla para sair\n");
+    getch();
 }
 
 void mostrarCliente(Cliente *cliente)
@@ -303,6 +322,9 @@ void buscaCliente()
         }
     }
     achaOcorrencia(achei, registroAcademico);
+
+    printf("Pressione qualquer tecla para sair\n");
+    getch();
 }
 
 Cliente retornaCliente(char *RegistroAcademico)
@@ -351,6 +373,14 @@ void aumentaQtdLivroEmArquivoLivro(char *nomeDoLivro)
     fclose(fileLivros);
 }
 
+int OrdenaRegistrosCadastrados(const void *a, const void *b)
+
+{
+    const Cliente *ponteiroRegistro1 = a;
+    const Cliente *ponteiroRegistro2 = b;
+    return strcmp(ponteiroRegistro1->aluno.nomeCompleto, ponteiroRegistro2->aluno.nomeCompleto);
+}
+
 void listarTodosClientes()
 {
 
@@ -372,19 +402,21 @@ void listarTodosClientes()
     fclose(file);
 
     printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-
+    qsort(arrayClientes, registrosDeClientes, sizeof(Cliente), OrdenaRegistrosCadastrados);
     for (index = 0; index < registrosDeClientes; index++)
         mostrarCliente(&arrayClientes[index]);
 
     free(arrayClientes);
+
+    printf("Pressione qualquer tecla para sair\n");
+    getch();
 }
 
 void abrirInstrucoes(); // TODO ESCREVER TXT COM LIVROS
 
-
 void excluirRegistro(char registroAcademico[19])
 {
-    
+
     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
     FILE *fileTemporario = abreArquivo("arquivoSistemaTemporario.dat", "wb");
 
@@ -409,13 +441,13 @@ void excluirRegistro(char registroAcademico[19])
             printf("Registro excluido do sistema!\n");
             continue;
         }
-            fwrite(&arrayClientes[index], sizeof(arrayClientes[index]), 1, fileTemporario);
+        fwrite(&arrayClientes[index], sizeof(arrayClientes[index]), 1, fileTemporario);
     }
 
     fclose(file);
     fclose(fileTemporario);
     free(arrayClientes);
-    renomeiaArquivoTemporario("arquivoSistema.dat","arquivoSistemaTemporario.dat");
+    renomeiaArquivoTemporario("arquivoSistema.dat", "arquivoSistemaTemporario.dat");
 
     achaOcorrencia(achei, registroAcademico);
 
@@ -436,5 +468,18 @@ void receberLivro()
         aumentaQtdLivroEmArquivoLivro(cliente.livro[i].nome);
         printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
     }
-    excluirRegistro(registroAcademico);   //POR FAVOR FUNCIONA
+    excluirRegistro(registroAcademico);
 }
+
+void abrirInstrucoes()
+{
+    char ch;
+    FILE *file = abreArquivo("instrucoes.txt", "r");
+    while ((ch = fgetc(file)) != EOF)
+        putchar(ch);
+
+    fclose(file);
+    printf("Pressione qualquer tecla para sair\n");
+    getch();
+}
+

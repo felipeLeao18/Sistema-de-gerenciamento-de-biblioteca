@@ -136,8 +136,10 @@ int existeNomeLivro(char *nomeDoLivro)
 
     return 0;
 }
-int verificaQuantidadeLivros(int quantidade){
-    if (quantidade <=0){
+int verificaQuantidadeLivros(int quantidade)
+{
+    if (quantidade <= 0)
+    {
         return 1;
     }
     return 0;
@@ -174,6 +176,7 @@ bool inputLivro(Livro *livro)
     {
         return false;
     }
+    livro->nome[0] = toupper(livro->nome[0]);
     printf("Digite o genero do livro:\n"); //
     scanf(" %[^\n]", &livro->genero);
 
@@ -223,6 +226,14 @@ void adicionarLivro()
     getch();
 }
 
+int ordenaLivroPorNome(const void *a, const void *b)
+
+{
+    const Livro *ponteiroLivro1 = a;
+    const Livro *ponteiroLivro2 = b;
+    return strcmp(ponteiroLivro1->nome, ponteiroLivro2->nome);
+}
+
 void listarTodosLivros()
 {
     FILE *file = abreArquivo("arquivoLivros.dat", "rb");
@@ -238,8 +249,10 @@ void listarTodosLivros()
 
     preencheListaDeLivrosComArquivo(&livros, file, arrayLivros);
     fclose(file);
+    qsort(arrayLivros, totalDeRegistrosDeLivros, sizeof(Livro), ordenaLivroPorNome);
 
     printf("- - - - - - - -LIVROS - - - - - - - - - -\n");
+
     for (index = 0; index < totalDeRegistrosDeLivros; index++)
     {
 
@@ -274,9 +287,9 @@ void buscarLivroPorNome()
             break;
         }
     }
-
+    fclose(file);
     buscaOcorrencia(achei, nomeLivro);
-    printf("Pressione qualquer tecla para sair!\n");
+    printf("Pressione qualquer tecla para continuar!\n");
     getch();
 }
 
@@ -297,21 +310,37 @@ void alteraDadosLivro()
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
 
-            if (inputLivro(&livro))
-            {
+            printf("Digite o nome do livro:\n");
+            scanf(" %[^\n]", &livro.nome);
+            livro.nome[0] = toupper(livro.nome[0]);
 
-                fseek(file, -sizeof(Livro), SEEK_CUR);
-                fwrite(&livro, sizeof(Livro), 1, file);
-                fclose(file);
+            printf("Digite o genero do livro:\n");
+            scanf(" %[^\n]", &livro.genero);
 
-                printf("Registro alterado com sucesso!\n");
-                break;
-            }
+            printf("Digite o codigo do livro:\n");
+            scanf("%d", &livro.codigo);
+
+            printf("Digite a editora do livro:\n");
+            scanf(" %[^\n]", &livro.editora);
+
+            printf("Digite o autor do livro:\n");
+            scanf(" %[^\n]", &livro.autor);
+
+            printf("Digite a quantidade de exemplares a serem cadastrados:\n");
+            scanf("%d", &livro.quantidade);
+
+            fseek(file, -sizeof(Livro), SEEK_CUR);
+            fwrite(&livro, sizeof(Livro), 1, file);
+            fclose(file);
+
+            printf("Registro alterado com sucesso!\n");
+            break;
         }
     }
+    fclose(file);
 
     buscaOcorrencia(achei, nomeLivroAlterado);
-    printf("Pressione qualquer tecla para sair!\n");
+    printf("Pressione qualquer tecla para continuar!\n");
     getch();
 }
 
@@ -356,6 +385,43 @@ void excluirLivro()
     buscaOcorrencia(encontraOcorrencia, procuraLivroNome);
     renomeiaArquivoTemporario("arquivoLivros.dat", "arquivoLivrosTemporario.dat");
 
+    printf("Pressione qualquer tecla para continuar!\n");
+    getch();
+}
+
+void anunciarPerdaLivro()
+{
+    char nomeLivro[MAX_ATRIBUTO_LIVRO];
+    int quantidadePerdidaDeLivro;
+
+    printf("Digite o nome do livro que foi perdido\n");
+    scanf(" %[^\n]", nomeLivro);
+
+    printf("Digite a quantidade Perdida\n");
+    scanf("%d", &quantidadePerdidaDeLivro);
+
+    FILE *file = abreArquivo("arquivoLivros.dat", "rb+");
+    bool achei = false;
+    Livro livro;
+    while (fread(&livro, sizeof(Livro), 1, file) > 0)
+    {
+        if (comparaNomeLivro(livro.nome, nomeLivro))
+        {
+            achei = true;
+
+            fseek(file, -sizeof(Livro), SEEK_CUR);
+            livro.quantidade -= quantidadePerdidaDeLivro;
+
+            fwrite(&livro, sizeof(Livro), 1, file);
+            fclose(file);
+            printf("Foram retiradas %d do livro '%s' do sistema\n", quantidadePerdidaDeLivro, livro.nome);
+            break;
+        }
+    }
+    if (achei == false)
+    {
+        printf("Livro nao encontrado no sistema\n");
+    }
     printf("Pressione qualquer tecla para continuar!\n");
     getch();
 }

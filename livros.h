@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include "arquivos.h"
 
+
 #define MAX_ATRIBUTO_LIVRO 40
 #define MAX_TAMANHO_GENERO 20
 
@@ -31,5 +32,6 @@ void listarTodosLivros();
 void buscarLivroPorNome();
 void alteraDadosLivro();
 void excluirLivro();
+void anunciarPerdaLivro();
 
 #endif

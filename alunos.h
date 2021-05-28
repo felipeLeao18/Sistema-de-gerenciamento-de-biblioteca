@@ -19,7 +19,7 @@ typedef struct aluno
 {
     char nomeCompleto[MAX_NOME_ALUNO];
     char registroAcademico[19];
-    long int numeroCelular;
+    char numeroCelular[18];
 } Aluno;
 
 void adicionarAluno();
@@ -29,3 +29,4 @@ void alteraDadosAluno();
 void excluirAluno();
 
 #endif
+

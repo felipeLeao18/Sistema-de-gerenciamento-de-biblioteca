@@ -1,0 +1,16 @@
+
+
+Para comecar usar o sistema:
+1- Registrar pelo menos um livro e um aluno;
+
+
+Observacoes:
+1- Cada aluno pode alugar no maximo 3 livros;
+1- Apos emprestar um livro para um aluno, o livro automaticamente ira diminuir 1 unidade em seu estoque;
+2- Apos o registro de entrega de livros do aluno, o sistema ira automaticamente aumentar 1 unidade do livro em seu estoque;
+3- Apos receber livro no menu Aluno, seu registro de emprestimo sera automaticamente excluido do sistema;
+4- Ao digitar um tipo de dado errado(Por exemplo no codigo do livro escrever uma letra) feche o programa imediatamente e entao refaca a operacao;
+5- Nao sao permitidos cadastro de LIVROS COM NOME OU CODIGO IGUAIS. Tambem nao sao permitidos cadastros com Registros academicos de alunos iguais;
+
+
+

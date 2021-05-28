@@ -1,7 +1,8 @@
 #include "menus.h"
 #include "sistema.h"
 int escolha;
-                                
+char nomeLivro[MAX_ATRIBUTO_LIVRO];
+
 void menuInicial()
 {
     while (1)
@@ -41,16 +42,16 @@ void menuInicial()
 
 void menuSistema()
 {
+   
     system("cls");
     printf("\n----------------------BIBLIOTECA UFG-------------------------\n");
-    printf("#                 1- Emprestar livro                        #\n");
-    printf("#                 2- Verificar disponibilidade              #\n");
-    printf("#                 3- Receber livro                          #\n");
-    printf("#                 4- Anunciar Perda                         #\n");
-    printf("#                 5- Abrir instrucoes do sistema            #\n");
-    printf("#                 6- Procurar registro de aluno             #\n");
-    printf("#                 7- Voltar para o menu inicial             #\n");
-    printf("--------------------------------------------------------------\n");
+    printf("#                 1- Emprestar livro                         #\n");
+    printf("#                 2- Listar Todos emprestimos                #\n");
+    printf("#                 3- Receber emprestimo de aluguel de Aluno  #\n");
+    printf("#                 4- Buscar registro de emprestimo           #\n");
+    printf("#                 5- Abrir menu de instrucoes                #\n");
+    printf("#                 6- Voltar para o menu inicial              #\n");
+    printf("---------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
     switch (escolha)
@@ -60,18 +61,19 @@ void menuSistema()
         criaCliente();
         break;
     case 2:
-        buscaCliente();
+        listarTodosClientes();
         break;
     case 3:
-        //Receber livro();  //TODO -> AUMENTAR 1 UNIDADE NO ARQUIVO LIVRO PARA O LIVRO DEVOLVIDO
-        //break;
+        receberLivro();
+        break;
     case 4:
-        //Anunciar Perda(); // TODO DIMINUIR -1 -> FUNCAO JA TA PRONTA
-        // break;
+        
+       buscaCliente();
+        break;
 
     case 5:
-        //abrirInstrucoes(); //TODO ESCREVER TXT;
-        //break;
+        abrirInstrucoes();
+        break;
     case 6:
         buscaCliente();
         break;
@@ -126,13 +128,14 @@ void menuAlunos()
 void menuLivros()
 {
     system("cls");
-    printf("\n--------------------BIBLIOTECA UFG---------------------------\n");
+    printf("\n--------------------BIBLIOTECA UFG--------------------------\n");
     printf("#                  1- Inserir livro                        #\n");
     printf("#                  2- Alterar livro                        #\n");
     printf("#                  3- Consultar livro                      #\n");
     printf("#                  4- Excluir livro do sistema             #\n");
     printf("#                  5- Listar todos os livros               #\n");
-    printf("#                  6- Voltar para o menu inicial           #\n");
+    printf("#                  6- Anunciar perda                       #\n");
+    printf("#                  7- Voltar para o menu inicial           #\n");
     printf("--------------------------------------------------------------\n");
     printf("Digite sua opcao:\n");
     scanf("%d", &escolha);
@@ -156,6 +159,9 @@ void menuLivros()
         listarTodosLivros();
         break;
     case 6:
+        anunciarPerdaLivro();
+        break;
+    case 7:
         menuInicial();
         break;
     default:
