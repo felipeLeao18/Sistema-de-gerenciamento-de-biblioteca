@@ -462,3 +462,4 @@ void abrirInstrucoes()
     printf("Pressione qualquer tecla para sair\n");
     getch();
 }
+

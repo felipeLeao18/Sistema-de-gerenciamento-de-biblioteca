@@ -14,3 +14,4 @@ Observacoes:
 7- Nao sao permitidos cadastro de LIVROS COM NOME OU CODIGO ja previamente cadastrados. Tambem nao sao permitidos cadastros com Registros academicos de alunos iguais;
 8- O nome e codigo de um livro sao imutaveis, ou seja, na hora de alterar os dados do livro estes nao poderao ser modificados, caso deseje alterar tais dados, exclua do sistema e cadastre novamente;
 9- O registro academico de um aluno e imutavel, se desejar alterar o registro academico, apague o aluno do sistema e refacao a operacao de cadastro para tal aluno;
+

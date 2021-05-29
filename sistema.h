@@ -28,7 +28,3 @@ void tiraLivroEstoque();
 void listarTodosClientes();
 void excluirRegistro(char registroAcademico[19]);
 #endif
-
-
-
-
