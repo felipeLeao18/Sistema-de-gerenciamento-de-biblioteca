@@ -64,6 +64,7 @@ void menuSistema()
         listarTodosClientes();
         break;
     case 3:
+
         receberLivro();
         break;
     case 4:
@@ -75,14 +76,12 @@ void menuSistema()
         abrirInstrucoes();
         break;
     case 6:
-        buscaCliente();
-        break;
-    case 7:
         menuInicial();
         break;
+
     default:
         printf("Digite uma opcao valida\n");
-        menuLivros();
+        menuInicial();
     }
 }
 

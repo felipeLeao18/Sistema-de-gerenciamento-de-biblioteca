@@ -26,14 +26,9 @@ void receberLivro();
 void abrirInstrucoes();
 void tiraLivroEstoque();
 void listarTodosClientes();
+void excluirRegistro(char registroAcademico[19]);
 #endif
 
-/*//TODO
-Anunciar perda 
-    
-    Passar ra do aluno
-    passar nome do(s) livro(s) perdidos
-    diminuir quantidade em -1 dos livros perdidos; - ARQUIVO LIVROS
-    */
+
 
 

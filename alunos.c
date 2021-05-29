@@ -133,11 +133,11 @@ void adicionarAluno()
     getch();
 }
 
-int ordenaAlunoPorNome(const void *a, const void *b)
+int ordenaAlunoPorNome(const void *registro1, const void *registro2)
 
 {
-    const Aluno *ponteiroAluno1 = a;
-    const Aluno *ponteiroAluno2 = b;
+    const Aluno *ponteiroAluno1 = registro1;
+    const Aluno *ponteiroAluno2 = registro2;
     return strcmp(ponteiroAluno1->nomeCompleto, ponteiroAluno2->nomeCompleto);
 }
 
@@ -155,6 +155,7 @@ void listarTodosAlunos()
     fclose(file);
 
     qsort(arrayAlunos, registrosDeAlunos, sizeof(Aluno), ordenaAlunoPorNome);
+
     int index;
     printf("- - - - - - - -ALUNOS - - - - - - - - - -\n");
     for (index = 0; index < registrosDeAlunos; index++)
@@ -218,9 +219,6 @@ void alteraDadosAluno()
             printf("Digite o nome do aluno\n");
             scanf(" %[^\n]", &aluno.nomeCompleto);
             aluno.nomeCompleto[0] = toupper(aluno.nomeCompleto[0]);
-
-            printf("Digite o registro academico do aluno\n");
-            scanf("%s", &aluno.registroAcademico);
             
             printf("Digite o numero de celular do aluno:\n");
             scanf(" %[^\n]", &aluno.numeroCelular);

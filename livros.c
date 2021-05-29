@@ -1,4 +1,5 @@
 #include "livros.h"
+#include "menus.h"
 
 void lancaExcecaoEmCriacaoDeLista(int quantidade);
 int tratamentoErroAlocarVetorDeLivros(Livro *livro);
@@ -226,11 +227,11 @@ void adicionarLivro()
     getch();
 }
 
-int ordenaLivroPorNome(const void *a, const void *b)
+int ordenaLivroPorNome(const void *registro1, const void *registro2)
 
 {
-    const Livro *ponteiroLivro1 = a;
-    const Livro *ponteiroLivro2 = b;
+    const Livro *ponteiroLivro1 = registro1;
+    const Livro *ponteiroLivro2 = registro2;
     return strcmp(ponteiroLivro1->nome, ponteiroLivro2->nome);
 }
 
@@ -310,15 +311,10 @@ void alteraDadosLivro()
             achei = true;
             printf("Registro encontrado! Digite os novos dados do livro: '%s' abaixo:\n\n", livro.nome);
 
-            printf("Digite o nome do livro:\n");
-            scanf(" %[^\n]", &livro.nome);
-            livro.nome[0] = toupper(livro.nome[0]);
 
             printf("Digite o genero do livro:\n");
             scanf(" %[^\n]", &livro.genero);
 
-            printf("Digite o codigo do livro:\n");
-            scanf("%d", &livro.codigo);
 
             printf("Digite a editora do livro:\n");
             scanf(" %[^\n]", &livro.editora);

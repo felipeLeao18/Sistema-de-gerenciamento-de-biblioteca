@@ -1,16 +1,16 @@
 
-
 Para comecar usar o sistema:
-1- Registrar pelo menos um livro e um aluno;
+Para registrar um emprestimo de Livro(s) para aluno(s):
+1 - Registrar pelo menos um livro e um aluno;
 
 
 Observacoes:
 1- Cada aluno pode alugar no maximo 3 livros;
-1- Apos emprestar um livro para um aluno, o livro automaticamente ira diminuir 1 unidade em seu estoque;
-2- Apos o registro de entrega de livros do aluno, o sistema ira automaticamente aumentar 1 unidade do livro em seu estoque;
-3- Apos receber livro no menu Aluno, seu registro de emprestimo sera automaticamente excluido do sistema;
-4- Ao digitar um tipo de dado errado(Por exemplo no codigo do livro escrever uma letra) feche o programa imediatamente e entao refaca a operacao;
-5- Nao sao permitidos cadastro de LIVROS COM NOME OU CODIGO IGUAIS. Tambem nao sao permitidos cadastros com Registros academicos de alunos iguais;
-
-
-
+2- Se o aluno tiver um registro pendente, nao podera realizar outro emprestimo ate que os livros alugados previamente sejam recebidos;
+3- Apos emprestar um livro para um aluno, o livro automaticamente ira diminuir 1 unidade em seu estoque;
+4- Apos o registro de entrega de livros do aluno, o sistema ira automaticamente aumentar 1 unidade do(s) livro(s) alugados pelo aluno na quantidade disponivel dos livros;
+5- Apos receber emprestimo de livro no menu Sistema, seu registro de emprestimo sera automaticamente excluido do sistema;
+6- Ao digitar um tipo de dado errado(Por exemplo no codigo do livro escrever uma letra) feche o programa imediatamente e entao refaca a operacao;
+7- Nao sao permitidos cadastro de LIVROS COM NOME OU CODIGO ja previamente cadastrados. Tambem nao sao permitidos cadastros com Registros academicos de alunos iguais;
+8- O nome e codigo de um livro sao imutaveis, ou seja, na hora de alterar os dados do livro estes nao poderao ser modificados, caso deseje alterar tais dados, exclua do sistema e cadastre novamente;
+9- O registro academico de um aluno e imutavel, se desejar alterar o registro academico, apague o aluno do sistema e refacao a operacao de cadastro para tal aluno;

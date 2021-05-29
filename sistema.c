@@ -1,7 +1,5 @@
 #include "sistema.h"
 
-void excluirRegistro(char registroAcademico[19]);
-
 int comparaString(const char *original, const char *buscada)
 {
     unsigned int tamanhoStrOriginal = strlen(original);
@@ -11,13 +9,6 @@ int comparaString(const char *original, const char *buscada)
         if (tolower(original[i]) != tolower(buscada[i]))
             return 0;
     return 1;
-}
-
-int struct_cmp_by_product(const void *a, const void *b)
-{
-    Cliente *ia = (Cliente *)a;
-    Cliente *ib = (Cliente *)b;
-    return strcmp(ia->aluno.nomeCompleto, ib->aluno.nomeCompleto);
 }
 
 void achaOcorrencia(bool achei, char *registroAcademico)
@@ -113,11 +104,7 @@ int verificaOcorrenciaRegistroAcademico(char *registroAcademico)
         printf("O aluno '%s' com Registro '%s' ja possui alugueis pendentes\n", cliente.aluno.nomeCompleto, cliente.aluno.registroAcademico);
         return 1;
     }
-    else
-    {
-
-        return 0;
-    }
+    return 0;
 }
 
 Livro retornaLivro(char *nome)
@@ -177,13 +164,12 @@ Aluno retornaAluno(char *registroAcademico)
     {
         return aluno;
     }
-    else
-    {
+    
         printf("Aluno nao encontrado no sistema, confira os dados e tente novamente!\n");
         printf("Pressione qualquer tecla para sair\n");
         getch();
-        menuInicial();
-    }
+       
+    
 }
 
 bool verificaDisponibilidadeLivro(char *nomeLivro)
@@ -248,12 +234,9 @@ bool inputCliente(Cliente *cliente)
             cliente->livro[index] = retornaLivro(cliente->livro[index].nome);
             tiraLivroEstoque(cliente->livro[index].nome);
         }
-        else
-        {
-            printf("Quantidade para livro '%s' indisponivel para aluguel\n", cliente->livro[index].nome);
-            return false;
-        }
+       
     }
+
     cadastraData(cliente);
     return true;
 }
@@ -340,16 +323,13 @@ Cliente retornaCliente(char *RegistroAcademico)
             achei = true;
 
             fseek(file, -sizeof(Cliente), SEEK_CUR);
+
             fclose(file);
             return cliente;
         }
     }
-
-    if (achei == false)
-    {
-        printf("O aluno nao possui livros alugados\n");
-    }
     fclose(file);
+
 }
 
 void aumentaQtdLivroEmArquivoLivro(char *nomeDoLivro)
@@ -373,11 +353,11 @@ void aumentaQtdLivroEmArquivoLivro(char *nomeDoLivro)
     fclose(fileLivros);
 }
 
-int OrdenaRegistrosCadastrados(const void *a, const void *b)
+int OrdenaRegistrosCadastrados(const void *registro1, const void *registro2)
 
 {
-    const Cliente *ponteiroRegistro1 = a;
-    const Cliente *ponteiroRegistro2 = b;
+    const Cliente *ponteiroRegistro1 = registro1;
+    const Cliente *ponteiroRegistro2 = registro2;
     return strcmp(ponteiroRegistro1->aluno.nomeCompleto, ponteiroRegistro2->aluno.nomeCompleto);
 }
 
@@ -412,9 +392,7 @@ void listarTodosClientes()
     getch();
 }
 
-void abrirInstrucoes(); // TODO ESCREVER TXT COM LIVROS
-
-void excluirRegistro(char registroAcademico[19])
+void excluirRegistro(char *registroAcademico)
 {
 
     FILE *file = abreArquivo("arquivoSistema.dat", "rb");
@@ -429,7 +407,7 @@ void excluirRegistro(char registroAcademico[19])
 
     size_t tamanhoArquivo = retornaTamanhoArquivo(file);
     int quantidadeDeRegistros = retornaQntClientesEmArquivo(file, tamanhoArquivo);
-    arrayClientes = (Cliente *)malloc(sizeof(tamanhoArquivo));
+    arrayClientes = (Cliente *)malloc(tamanhoArquivo);
 
     preencheListaDeClientesComArquivo(&cliente, file, arrayClientes);
 
@@ -443,10 +421,11 @@ void excluirRegistro(char registroAcademico[19])
         }
         fwrite(&arrayClientes[index], sizeof(arrayClientes[index]), 1, fileTemporario);
     }
+    free(arrayClientes);
 
     fclose(file);
     fclose(fileTemporario);
-    free(arrayClientes);
+
     renomeiaArquivoTemporario("arquivoSistema.dat", "arquivoSistemaTemporario.dat");
 
     achaOcorrencia(achei, registroAcademico);
@@ -468,6 +447,7 @@ void receberLivro()
         aumentaQtdLivroEmArquivoLivro(cliente.livro[i].nome);
         printf("Livro %s recebido com sucesso\n", cliente.livro[i].nome);
     }
+
     excluirRegistro(registroAcademico);
 }
 
@@ -482,4 +462,3 @@ void abrirInstrucoes()
     printf("Pressione qualquer tecla para sair\n");
     getch();
 }
-
