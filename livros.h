@@ -22,7 +22,7 @@ typedef struct livro
     char genero[MAX_TAMANHO_GENERO];
     char autor[MAX_ATRIBUTO_LIVRO];
     char editora[MAX_ATRIBUTO_LIVRO];
-    int codigo; // -> STRINGGGGGGGGGGG
+    int codigo;
     int quantidade;
 } Livro;
 
