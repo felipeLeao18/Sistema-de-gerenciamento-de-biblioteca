@@ -1,8 +1,11 @@
-# **Projeto final da disciplina: Algoritmos e estruturas de dados 1**
+# **Sistema de gerenciamento de biblioteca utilizando linguagem C** 
 
-## Universidade federal de Goias
+## Projeto final da disciplina: Algoritmos e estruturas de dados 1 na Universidade Federal de Goias
 
-### Sistema de gerenciamento de biblioteca utilizando linguagem C
+<h4 align="center"> 
+	✅  Status:  ✅ Finalizado  ✅
+</h4>
+
 
 #### Estruturas utilizadas:
 - Manipulacao de arquivos.
@@ -11,6 +14,11 @@
 - Ordenacao(qsort).
 - Manipulacao de Datas com a biblioteca time.h.
 - Uso de multiplos arquivos (headers e .c).
+
+### Features
+- [x] Operacoes CRUD com livros, alunos e clientes
+- [x] Manipulacao de arquivos
+- [x] Versao final do sistema 
 ---------------------------------------------------------------------------------------
 
 ### Para comecar usar o sistema:
