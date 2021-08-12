@@ -1,7 +1,6 @@
 #include "menus.h"
 #include "sistema.h"
 int escolha;
-char nomeLivro[MAX_ATRIBUTO_LIVRO];
 
 void menuInicial()
 {
